@@ -3,6 +3,7 @@
 toggleboard.py
 - Written by Aaron Delaney for CPPSD1 Practicium Mandatory Assignment 3
 - For instructions see ./README.txt or ./README.html
+- ASCII Text generated on http://patorjk.com/software/taag/
 
 ## Basic Design
 
@@ -68,6 +69,14 @@ class Constants(object):
     InputWASDPrompt = "w: up | a: left | s: down | d: right | e: flip\n"
     InputCoordPrompt = "(row, column) to co-ord: "
     debug = False
+    Congrats = """
+ _       __     ____         __                     __   __
+| |     / /__  / / /  ____  / /___ ___  _____  ____/ /  / /
+| | /| / / _ \/ / /  / __ \/ / __ `/ / / / _ \/ __  /  / / 
+| |/ |/ /  __/ / /  / /_/ / / /_/ / /_/ /  __/ /_/ /  /_/  
+|__/|__/\___/_/_/  / .___/_/\__,_/\__, /\___/\__,_/  (_)   
+                  /_/            /____/                    
+    """
 
 # GLOBALS ALERT!! DANGER! BEWARE! WATCH OUT! CAREFUL! #
 
@@ -119,7 +128,19 @@ def smart_input(prompt, transform_func=None, \
     return value
 
 class InputManager(object):
+    """InputManager() -> Returns InputManager instance
+    
+    Important Methods:
+        get_input() -> Gets user input based on what is set
+         in constants.InputType
+
+    Notes:
+        Makes use of some fancy static-method stuff, including
+        a nice little recursive input method. Read up on the
+        @staticmethod directive for more information.
+    """
     def get_input(self):
+        """Gets user input based on what is set in constants.InputType"""
         if constants.SelectedInput == constants.InputWASD:
             return self._get_wasd_input()
         elif constants.SelectedInput == constants.InputCoord:
@@ -142,7 +163,7 @@ class InputManager(object):
         coordy = int(coord[1])
         if constants.debug == True:
             print '(X, Y)', coordx, coordy
-            sleep(1)
+            sleep(.5) # This allows it it to be read before rerender
         return GridPoint(coordx, coordy)
 
     @staticmethod
@@ -155,6 +176,7 @@ class InputManager(object):
 
     @staticmethod
     def _process_wasd_input(s):
+        """Recursive method of validating user input"""
         if len(s) == 0:
             return ''
         c = s[0].lower()
@@ -162,6 +184,12 @@ class InputManager(object):
             return c + InputManager._process_wasd_input(s[1:])
 
 class Game(object):
+    """The Game Handler, used for Game.run()
+    
+    If the project grew more, it may be worth moving the Constants
+    object to the Game object, so as to remove the global variable
+    and make the Game object more useful. For now that's not neccesary.
+    """
     def run(self):
         print constants.WelcomeMsg
 
@@ -200,17 +228,17 @@ class Game(object):
                 if constants.debug: print sys.exc_info()
                 print 'What even was that input?'
             if game_board.finished():
+                renderer.render_board(game_board) # Show them they're finished
                 print 'Oh.. you won!'
                 sleep(.5) # these sleep calls make the game feel fun
                 print '...'
-                sleep(.5)
+                sleep(2) # adding tension for the big finale
                 if easter_egg:
-                    print 'Because you are awesome here is a bonus!'
+                    print 'You found the easter egg! :)'
                     sleep(1)
                     import webbrowser
                     webbrowser.open("https://youtu.be/rY0WxgSXdEE?t=7")
-                else:
-                    print 'GGWP!!'
+                print constants.Congrats
                 sys.exit(0)
 
 class GridPoint(object):
@@ -221,6 +249,8 @@ class GridPoint(object):
 
     GridPoints also support addition, so:
         p1 + p2 = GridPoint(p1.x + p2.x, p1.y+p2.y)
+    
+    Print them normally, print p1
     """
     def __init__(self, x, y):
         self.x = x
@@ -249,6 +279,15 @@ class GridPoint(object):
         return '( ' + str(self.x) + ', ' + str(self.y) + ')'
 
 class Renderer(object):
+    """Renderer(game_board) -> Renderer object
+    
+    Important Methods:
+        generate_board(game_board) -> str :
+          This does a nice render of the game board based on game
+          positions
+        render_board(board):
+          Clears the terminal and prints the board to the screen
+    """
     def __init__(self, game_board):
         self._header = self._make_vertical_header(game_board) + '\n'
 
@@ -300,9 +339,9 @@ class Board(object):
       Board.finished() -> Returns bool:
         Returns True if the game is complete, when all the grid-cells
         are true
-      Board.handle() -> Keep track of the current user position, 
-       based on Constant.ControlUp, etc. Any non-recognized input
-       will be counted as a flip, so be careful!
+      Board.handle_input(input):
+        Handles user input elegently based on the type of game input
+        defined in constants.InputType.
     """
     UpVector    = GridPoint(0, -1)
     DownVector  = GridPoint(0,  1)
@@ -322,6 +361,7 @@ class Board(object):
         self.total_toggled = 0 
 
     def handle_input(self, user_input):
+        """"""
         if constants.debug: print 'handling: ', user_input
         if constants.SelectedInput == constants.InputWASD:
             if constants.debug: print 'input is wasd'
@@ -352,16 +392,25 @@ class Board(object):
     def _push_current_pos(self, direction):
         """ This method is some internal handling on position 
         movement. It essetially ensures the position doesn't
-        escape the board boundries.
+        escape the board boundries. 
+
+        Note: it should only be called when InputWASD is the Input type
+          (see constants.InputType)
         """
         new_pos = self.current_pos + direction
-        print new_pos
+        if constants.debug: print new_pos
         if new_pos.ongrid(self.size):
             return new_pos
         else:
             return self.current_pos
 
     def flip(self, point=None):
+        """flip(point):
+        Flips the game board accordig the game rules
+        Arugments:
+         point must be a GridPoint object or referencable by 
+         point.x and point.y
+        """
         if constants.debug: print 'flipping ', point        
         if point == None:
             point = self.current_pos
@@ -374,6 +423,7 @@ class Board(object):
                 self._update_total_toggled(self.grid[adj_point.y][adj_point.x])
 
     def _update_total_toggled(self, cell):
+        """Essential for knowing when the game is finished"""
         if cell:
             self.total_toggled += 1
         if not cell:

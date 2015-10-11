@@ -25,3 +25,14 @@ To use WASD controls instead of coordinate input, use
 
     python toggleboard.py --control-wasd/--control-coord
 
+# README
+
+I reccomend you open README.html in a modern browser to see
+details on design of the code. It's included in the toggleboard
+opening but it's rendered nicely in the html.
+
+# References
+Text Generated on:
+    http://patorjk.com/software/taag/
+
+Written by Aaron Delaney for CPPSD1 Assignment 3
