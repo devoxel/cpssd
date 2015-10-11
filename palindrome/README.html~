@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<title>README</title>
+
+<xmp theme="cerulean" style="display:none;">
+
+
+# Usage
+
+### Part 1:
+```sh
+$ c2-fun-with-palindromes.py --iter/--recur/--part2/--run_all [palindromes, ...]
+```
+
+For example:
+```sh
+$ c2-fun-with-palindromes.py --iter racecar foobar
+> Iterative Palindrom Checker
+    racecar:        True
+    foobar:         False
+```
+
+### Part 2:
+```sh
+$ c2-fun-with-palindromes.py --part2 [palindrome anagrams, ...]
+```
+
+For example:
+```sh
+$ c2-fun-with-palindromes.py --part2 racerac foofoo aaaabbbb catmat
+> Anagram Palindrom Checker
+    racerac:        True
+    foofoo:         True
+    aaaabbbb:       True
+    catmat:         False
+```
+
+</xmp>
+
+<script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
+</html>
+

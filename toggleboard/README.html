@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<title>README</title>
+
+<xmp theme="cerulean" style="display:none;">
+# Usage
+
+It's recommnded to use `toggleboard.py` from the terminal.
+
+    cd <location>
+    python toggleboard.py
+ 
+# Testing
+
+Since many errors are silenced with python's try except syntax
+I allow for an optional argument, `--debug`, to be passed into 
+`toggleboard.py`, like so:
+
+    python toggleboard.py --debug
+
+You can also pass in `--test` to initiate some internal 
+class method and function tests to ensure the program is
+working correctly, and can handle bad input elegantly.
+
+# Controls
+
+To use WASD controls instead of coordinate input, use
+--control-wasd, like so:
+
+    python toggleboard.py --control-wasd/--control-coord
+
+## Basic Design
+
+The game uses a couple of important classes
+
+- Constants handles most game data and is initalized globally
+ as constants
+
+- GridPoint is an x,y type object. For exmample:
+      gp = GridPoint(10,11)
+      gp.x - gp.y
+      > -1
+  It also has some helper methods and overloads adding and printing.
+  I use it for sizes also, so I can access the sizes with x and y
+
+- InputManager handles all input. Ensure constants.InputType is set correctly
+
+- Board is an important class that handles point flipping and knowing when the
+  board is done. Go read it to understand!
+
+- Game contains the main game loop and error handling, as well as a nice 
+  little easter egg: when you say oui to the first question, when you win 
+  you get a queen song!
+
+- smart_input is a sweet little function I wrote to handle input 
+  by passing in some functions. It trys to transform the input and
+  if it fails just asks again.
+  I should write a better one that allows changing the context, 
+  but it wasn't neccessary for this project
+
+- Other stuff might be hanging around too, just check out the comments
+</xmp>
+
+<script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
+</html>
