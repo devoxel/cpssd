@@ -1,9 +1,3 @@
-<!DOCTYPE html>
-<html>
-<title>README</title>
-
-<xmp theme="united" style="display:none;">
-
 ## Running this is easy!
 
 ```
@@ -26,7 +20,4 @@ glory by opening README.html in a modern browser.
 
 This file was mostly written in linux, so the EOL (end of line) format may
 display incorrectly inside your editor.
-</xmp>
 
-<script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
-</html>
