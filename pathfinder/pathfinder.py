@@ -6,7 +6,7 @@
 
 ## Command Line Interface
 
-Usage: pathfinder.py [OPTIONS]
+Usage: pathfinder.py [OPTIONS] [TABLE ...]
 
 Options:
 
@@ -34,8 +34,6 @@ If no OPTIONS are included, then pathfinder starts asking the user for input.
 """
 
 import sys
-
-from ast import literal_eval # parse python literals safetly
 
 def on_table(point, rows, cols):
     x_on = point[0] < cols and point[0] >= 0
@@ -65,37 +63,7 @@ def num_of_paths(table, num_rows=None, num_cols=None):
     num_paths = 0
     return num_paths
 
-def verify_table(l):
-    """ Given l, test if it meets the requirements for a table.
-    If the table is valid:
-        return rows, columns
-    If the table is invalid:
-        return False
-
-    Table Input Format
-     [
-       [1,1,0,0],
-       [1,1,1,1],
-       [1,1,1,1],
-       [1,1,1,1]
-     ]
-    """
-    try:
-        if not (type(l) is list):
-            return False
-        rows = len(l)
-        if rows == 0:
-            return False
-        cols = len(l[0])
-        for row in l:
-            if len(row) != cols:
-                return False
-            for value in l:
-                if value != 1 or value != 0:
-                    return False
-        return rows, cols
-    except:
-        return False
+### TESTING FUNCTION
 
 def _test(loud):
     """_test(loud): run unit tests on pathfinder
@@ -158,7 +126,7 @@ def _test(loud):
                 else:
                     bigtable_hard[i].append(1)
 
-    if loud: print _readable_dict(locals())
+    if loud: print locals()
     if loud: print '- number_of_paths()\n'
     basic1_value_run = num_of_paths(basic1)
     basic2_value_run = num_of_paths(basic2)
@@ -182,46 +150,21 @@ def _test(loud):
     print 'Tests passed'
     return 0
 
-# helper functions to make loud testing easier
-
-def _readable_dict(d):
-    """Returns a readable string representation of a dictionary"""
-    output = "\n"
-    for key in d:
-        value = d[key]
-        if type(value) is list:
-            output +=  str(key) + ': ' + _readable_list(value, prepend='  ') + '\n'
-        else:
-            output +=  str(key) + ': ' + str(value) + '\n\n'
-    return output
-
-def _readable_list(l, prepend=""):
-    """Returns a readable string representation of a list
-
-    Optional Arugments:
-    - prepend: some text to prepend to each list
-    """
-    output = "[\n"
-    for value in l:
-        output += prepend + str(value) + ', \n'
-    output += ']'
-    return output
-
 ########
 
-def _evaluate_t_argument():
-    next_table = False
-    for arg in sys.argv:
-        if arg == '-t':
-            next_table = True
-        if next_table:
-            table = verify_table(literal_eval(arg))
-            rows, cols = table.len(), table[0]
-            print arg, '\n\tpaths:', num_of_paths(table, rows, cols)
 
 if __name__ == '__main__':
+    warn ='  Warning: eval() is being called on input, do not use in production'
     if '--test' in sys.argv:
         _test(loud=True) if '--verbose' in sys.argv else _test(loud=False)
 
-    if '-t' in sys.argv:
-        _evaluate_t_argument()
+    else:
+        print '\n','~-'*35
+        print warn
+        print '-~'*35, '\n'
+        for arg in sys.argv[1:]:
+            try:
+                result = num_of_paths(eval(arg))
+                print arg, '\n', 'amount of paths:', '\n'
+            except:
+                print 'invalid table','\n'
