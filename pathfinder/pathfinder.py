@@ -35,11 +35,6 @@ If no OPTIONS are included, then pathfinder starts asking the user for input.
 
 import sys
 
-def on_table(point, rows, cols):
-    x_on = point[0] < cols and point[0] >= 0
-    y_on = point[1] < rows and point[1] >= 0
-    return x_on and y_on
-
 def num_of_paths(table, num_rows=None, num_cols=None):
     """num_of_paths -> returns int
 
@@ -58,10 +53,30 @@ def num_of_paths(table, num_rows=None, num_cols=None):
        [1,1,1,1],
        [1,1,1,1]
      ]
-    The table should be accessed by table[row][col]
+    The table should be accessed by table[y][x]
     """
-    num_paths = 0
-    return num_paths
+    try:
+        num_paths = 0
+        if num_rows == None: num_rows = len(table[0])
+        if num_cols == None: num_cols = len(table)
+        value_table = [[ None for i in range(0, num_rows) ] for i in range(0, num_cols)]
+        for cur_x in range(0, num_rows):
+            for cur_y in range(0, num_cols):
+                left = cur_x - 1
+                up   = cur_y - 1
+                if table[cur_y][cur_x] == 1:
+                    new_value = 0
+                    if left >= 0 and value_table[cur_y][left] is not None:
+                        new_value += value_table[cur_y][left]
+                    if up >= 0 and value_table[up][cur_x] is not None:
+                        new_value += value_table[up][cur_x]
+                    if cur_y == 0 and cur_x == 0:
+                        new_value = 1
+                    value_table[cur_y][cur_x] = new_value
+        return value_table[num_cols-1][num_rows-1]
+    except IndexError:
+        print 'Oops, invalid table entered'
+        sys.exit(1)
 
 ### TESTING FUNCTION
 
@@ -96,8 +111,8 @@ def _test(loud):
     square_hard = [[1,0,0], [1,1,0],[1,1,1]]
     square_hard_value = 2
 
-    table_strange = [[1] for i in range(0,13)]
     table_strange_value = 1
+    table_strange = [[1] for i in range(0,13)]
 
     invalid_table = [1,1,1]
     invalid_table2 = "table!?"
@@ -110,7 +125,7 @@ def _test(loud):
     # If it can't I have to restructure the algorithm
     bigtable_easy = []
     bigtable_hard = []
-    bigtablex, bigtabley = 4, 4
+    bigtablex, bigtabley = 5, 5
     for i in range(0, bigtablex):
         bigtable_easy.append([])
         bigtable_hard.append([])
@@ -124,8 +139,8 @@ def _test(loud):
                 if k % 3 == 0:
                     bigtable_hard[i].append(0)
                 else:
-                    bigtable_hard[i].append(1)
 
+                    bigtable_hard[i].append(1)
     if loud: print locals()
     if loud: print '- number_of_paths()\n'
     basic1_value_run = num_of_paths(basic1)
@@ -139,14 +154,11 @@ def _test(loud):
     if loud: print basic3, '=', basic3_value_run, 'should equal', basic3_value
     if loud: print basic4, '=', basic4_value_run, 'should equal', basic4_value
     if loud: print square_easy, '=', square_easy_value_run, 'should equal', square_easy_value
-
     #if loud: print num_of_paths(bigtable_hard)
     if loud: print num_of_paths(bigtable_easy)
+
     if loud: print '\n- verify_table()\n'
-
-
     if loud: print '\n- _evaluate_t_argument()\n'
-
     print 'Tests passed'
     return 0
 
