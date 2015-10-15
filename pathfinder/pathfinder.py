@@ -6,9 +6,12 @@
 
 ## Command Line Interface
 
-Usage: pathfinder.py [OPTIONS] [TABLE ...]
+Usage: pathfinder.py [OPTIONS]
 
 Options:
+
+  --help:
+    Print this help file
 
   --test:
     Initiates test protocol.
@@ -19,33 +22,58 @@ Options:
   --verbose:
     Enables verbose output
 
-  table:
-    For example:
-        $ pathfinder.py [[1,0],[0,1],[1,1]]
+CLI:
+  The command line interface is simple but powerful.
 
-    For info on table structure, read the documentation provided in the file.
-    Multiple tables can be passed in.
+      Table Input Format:
+      [ [1,1,0,0], [1,1,1,1], [1,1,1,1], [1,1,1,1] ]
 
-If no OPTIONS are included, then pathfinder starts asking the user for input.
+  To use it normally just run the script.
+
+  However to use it effienctly you can just make a file with your tables and
+  use bash (or your equivalent) to pass the arguments in, like so:
+
+    $ cat example_tables.txt | python pathfinder.py
+
 """
 
 import sys
 
+from ast import literal_eval # Important to safely parse user inputted data
+
 def _cli():
     """CLI handles all the user interaction over the command line."""
-    warn= '  Warning: eval() is being called on input, do not use in production'
-    if '--test' in sys.argv:
-        _test(loud=True) if '--verbose' in sys.argv else _test( loud=False )
-    elif len(sys.argv) > 1:
-        print '\n','~-'*35, '\n',  warn, '\n', '-~'*35, '\n'
-        for arg in sys.argv[1:]:
-            try:
-                result = num_of_paths(eval(arg))
-                print arg, '\n', '  amount of paths:', result, '\n'
-            except:
-                print 'invalid table','\n'
-    else:
+
+    if '--verbose' in sys.argv: loud = True
+    else: loud = False
+
+    if '--help' in sys.argv:
         print(__doc__) # the beauty of docstrings in one line
+    elif '--test' in sys.argv:
+        _test(loud)
+    else:
+        _get_user_input(loud)
+
+def _get_user_input(loud):
+    running = True
+    print 'CTRL-X or EOF to exit'
+
+    prompt = "Enter your table like a pythonic data structure\n"
+    while running:
+        try:
+            user_input = raw_input(prompt)
+            table = literal_eval(user_input)
+            print _nice_table(table)
+            print 'Number of paths:', num_of_paths(table)
+        except KeyboardInterrupt:
+            sys.exit(0)
+        except EOFError:
+            sys.exit(0)
+        except:
+            print '\nInvalid string', user_input
+            if loud:
+                print sys.exc_info()
+            print
 
 def num_of_paths(table, num_rows=None, num_cols=None):
     """num_of_paths -> returns int
@@ -131,11 +159,19 @@ def _test(loud):
     print '++ Tests passed'
     return 0
 
+def _nice_table(t):
+    out = '[\n'
+    for v in t:
+        out += '    ' + str(v) + '\n'
+    return out + ']'
 
 if __name__ == '__main__':
     try:
         _cli()
+    except SystemExit:
+        print ''
+        sys.exit(0)
     except:
-        print 'Something went wrong.. '
+        print '\nSomething went wrong.. '
         print sys.exc_info()
         print 'Try running with --verbose'
