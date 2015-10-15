@@ -30,8 +30,7 @@ CLI:
 
   To use it normally just run the script.
 
-  However to use it effienctly you can just make a file with your tables and
-  use bash (or your equivalent) to pass the arguments in, like so:
+  However to use it effienctly you can just make a file with your tables and use bash (or your equivalent) to pass the arguments in, like so:
 
     $ cat example_tables.txt | python pathfinder.py
 

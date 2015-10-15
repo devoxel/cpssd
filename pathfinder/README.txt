@@ -1,28 +1,15 @@
 
-# Usage
+# Usage Info
 
-I suggest a terminal but regardless, just do this:
-
-    python pathfinder.py
+    python pathfinder.py --help
 
 The file should work with all python 2.7.X distributions.
 
 # pathfinder.py
-    - Written by Aaron Delaney, 2015
-    - Built with https://www.python.org/
-    - Developed for CPSSD1 @ DCU
-    - References:
-      - Loading from a file in unix-likes:
-       http://unix.stackexchange.com/questions/149726/how-to-pass-each-line-of-a-text-file-as-an-argument-to-a-command
-       @konsolebox
+- Written by Aaron Delaney, 2015
+- Built with https://www.python.org/
+- Developed for CPSSD1 @ DCU
 
-
-## Command Line Interface
-
-# pathfinder.py
-    - Written by Aaron Delaney, 2015
-    - Built with https://www.python.org/
-    - Developed for CPSSD1 @ DCU
 
 ## Command Line Interface
 
@@ -34,7 +21,7 @@ The file should work with all python 2.7.X distributions.
 
     Print this help file
 
-  `--test`:
+  `--test`st:
 
     Initiates test protocol.
 
@@ -54,7 +41,7 @@ The file should work with all python 2.7.X distributions.
 
   To use it normally just run the script.
 
-  However to use it efficiently you can just make a file with your tables and
-  use bash (or your equivalent) to pass the arguments in, like so:
+  However to use it efficiently you can just make a file with your tables and use bash (or your equivalent) to pass the arguments in, like so:
 
-    $ cat example_tables.txt | python pathfinder.py
+
+  $ cat example_tables.txt | python pathfinder.py
