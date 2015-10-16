@@ -1,14 +1,22 @@
-
 import math
 
-def get_perm(s, words=''):
-    if len(s) == 1:
-        return s
-    else:
-        for i in xrange(0, len(s)):
-            new_word = s[:i] + s[i+1:]   
-            perms = get_perm(new_word, words)
-            words += s[i] + perms
-    return words
+def get_perm(l):
+    
+    if len(l) == 1:
+        return [0]
+    elif len(l) == 2:
+        return [[0, 1], [1, 0]] 
+        
+    new = []
+    for i in range(0, len(l)):
+        new.append([i] + get_perm(l[:i] + l[i+1:]))
+    return new
+            
+s = 'asdfghi'
+perms = get_perm(s)
 
-print get_perm(' asdf ')
+def print_perms(perms, s):
+    for i in perms:
+        if i not type(l):
+            print s[i]
+        else:
