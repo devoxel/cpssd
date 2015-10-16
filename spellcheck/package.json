@@ -1,0 +1,16 @@
+{
+  "name": "Wand",
+  "version": "0.0.1",
+  "description": "Spell Checker",
+  "author": {
+    "name": "Aaron Delaney",
+    "email": "aaron.delaney29@mail.dcu.ie"
+  },
+  "devDependencies": {
+    "coffee-script": "latest"
+  },
+  "scripts": {
+    "build": "coffee -o dist/ -c src/main.coffee",
+    "build:watch": "coffee -w -o dist/ -c src/main.coffee"
+  }
+}
