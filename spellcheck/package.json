@@ -11,6 +11,6 @@
   },
   "scripts": {
     "build": "coffee -o dist/ -c src/main.coffee",
-    "build:watch": "coffee -w -o dist/ -c src/main.coffee"
+    "build:watch": "coffee --map -w -o dist/ -c src/main.coffee"
   }
 }
