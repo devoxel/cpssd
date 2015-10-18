@@ -90,3 +90,6 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Javascript Map Files for debug
+*.js.map
