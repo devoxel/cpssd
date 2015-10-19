@@ -1,3 +1,39 @@
 body {
   font-family: monospace;
+  background-color: #002b36;
+}
+
+#container {
+  position: absolute;
+}
+
+#text {
+  font-size: 24px;
+  padding: 12px 0 0 12px;
+  margin: 0;
+  margin-left: 20px;
+  background-color: #073642;
+  color: #657b83;
+  overflow: auto;
+  position: relative;
+  height: 100%;
+  width: 50%;
+}
+
+#text :active {
+  border:none;
+  outline:none;
+}
+
+#info {
+  position: absolute;
+  padding: 12px 0 0 12px;
+  font-size: 24px;
+  background-color: #073642;
+  color: #b58900;
+  height: 100%;
+  width: 45%;
+  top: 0%;
+  left: 55%;
+  border-left: 1px solid  #002b36;
 }
