@@ -8,6 +8,10 @@ http://github.com/devoxel | http://twitter.com/devoxel
 
 When I get permission to release open-source it,
 you'll be able to find it at my github!
+
+ * Dependincies
+
+- jQuery, to make dom manipulations work across all browsers
  */
 
 (function() {
@@ -23,11 +27,13 @@ you'll be able to find it at my github!
   })();
 
   EditorModel = (function() {
-    function EditorModel(config1) {
+    function EditorModel(config1, view) {
       this.config = config1;
+      this.view = view;
       if (this.config.debug) {
         console.log("+ Iniating Model");
       }
+      this.text = "Welcome to wand.";
     }
 
     return EditorModel;
@@ -40,15 +46,21 @@ you'll be able to find it at my github!
       if (this.config.debug) {
         console.log("+ Initiating EditorView");
       }
+      this.initiateTextArea(window.innterHeight, window.innerWidth);
     }
+
+    EditorView.prototype.initiateTextArea = function(width, height) {
+      return console.log();
+    };
 
     return EditorView;
 
   })();
 
   EditorController = (function() {
-    function EditorController(config1) {
+    function EditorController(config1, model) {
       this.config = config1;
+      this.model = model;
       if (this.config.debug) {
         console.log("+ Initiating EditorController");
       }
@@ -60,11 +72,11 @@ you'll be able to find it at my github!
 
   config = new Config();
 
-  editor_model = new EditorModel(config);
-
   editor_view = new EditorView(config);
 
-  editor_controller = new EditorController(config);
+  editor_model = new EditorModel(config, editor_view);
+
+  editor_controller = new EditorController(config, editor_model);
 
 }).call(this);
 
