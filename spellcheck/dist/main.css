@@ -36,4 +36,5 @@ body {
   top: 0%;
   left: 55%;
   border-left: 1px solid  #002b36;
+  overflow: auto;
 }

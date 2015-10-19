@@ -99,7 +99,7 @@ you'll be able to find it at my github!
 
     EditorModel.prototype.initInfoArea = function() {
       this.updateInfo();
-      this.container.append("<div id=\"info\">\nWand /*\n<br>\nword count: " + this.word_count + "\n<br>\nmisspelled words:\n<br>\n" + (format_misspelling(this.misspelled)) + "\n</div>");
+      this.container.append("<div id=\"info\">\nWand /*\n<br><br>\nword count: " + this.word_count + "\n<br>\nmisspelled words:\n<br>\n" + (format_misspelling(this.misspelled)) + "\n</div>");
       return this.info = $("#info");
     };
 
@@ -109,7 +109,7 @@ you'll be able to find it at my github!
     };
 
     EditorModel.prototype.drawInfo = function() {
-      return this.info.html("Wand /*\n<br>\nword count: " + this.word_count + "\n<br>\nmisspelled words:\n<br>\n" + (format_misspelling(this.misspelled)));
+      return this.info.html("Wand /*\n<br><br>\nword count: " + this.word_count + "\n<br>\nmisspelled words:\n<br>\n" + (format_misspelling(this.misspelled)));
     };
 
     EditorModel.prototype.updateText = function() {

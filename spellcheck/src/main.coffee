@@ -71,7 +71,7 @@ class EditorModel
     @container.append """
     <div id="info">
     Wand /*
-    <br>
+    <br><br>
     word count: #{@word_count}
     <br>
     misspelled words:
@@ -88,7 +88,7 @@ class EditorModel
   drawInfo: ->
     @info.html """
     Wand /*
-    <br>
+    <br><br>
     word count: #{@word_count}
     <br>
     misspelled words:
