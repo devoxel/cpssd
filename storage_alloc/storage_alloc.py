@@ -28,13 +28,13 @@ def main():
 def allocate_storage(locations, items):
     alloc = {}
     
-    item_list = items.keys()
-    location_list = locations.keys()
-
+    item_list = sorted(items, key=lambda key: items[key][1]/items[key][0], reverse=True)
+    location_list = sorted(locations, key=lambda key: locations[key][1])
+    
     for item in item_list:
         stored = 0
         quantity = items[item][0]
-        freq = items[item][1] 
+        freq = items[item][1]
         for location in location_list:
             capacity = locations[location][0]
             if capacity <= 0:
@@ -43,17 +43,16 @@ def allocate_storage(locations, items):
             if stored == quantity:
                 break
             else:
-                if capacity < quantity:
-                    storing_on_location = quantity - capacity
+                if capacity < (quantity - stored) :                    
+                    storing_on_location = capacity                
                 else:
-                    storing_on_location = quantity 
+                    storing_on_location = quantity - stored
                 if item not in alloc:
                     alloc[item] = [(location, storing_on_location)]
                 else:
                     alloc[item].append((location, storing_on_location))
                 stored += storing_on_location
                 locations[location][0] -= storing_on_location
-                print location, locations[location][0]
     return alloc
 
 def parse_line(s):
