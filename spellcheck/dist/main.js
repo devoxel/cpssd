@@ -15,7 +15,7 @@ you'll be able to find it at my github!
  */
 
 (function() {
-  var Config, EditorController, EditorModel, EditorView, check_spelling, config, countStr, editor_controller, editor_model, editor_view, format_misspelling,
+  var Config, EditorController, EditorModel, EditorView, check_spelling, config, countStr, editor_controller, editor_model, editor_view, format_misspelling, get_reccomendations,
     indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   countStr = function(string, regex) {
@@ -45,14 +45,19 @@ you'll be able to find it at my github!
     return s;
   };
 
+  get_reccomendations = function(word) {
+    return ["asdf", 'casdf'];
+  };
+
   check_spelling = function(string, word_regex, word_list) {
     var i, len, misspelled, ref, ref1, word;
     misspelled = {};
+    console.log(word_list);
     ref = string.split(word_regex);
     for (i = 0, len = ref.length; i < len; i++) {
       word = ref[i];
       if (indexOf.call(misspelled, word) < 0 && word.length > 0 && (ref1 = word.toLowerCase(), indexOf.call(word_list, ref1) < 0)) {
-        misspelled[word] = ['put reccomendations here'];
+        misspelled[word] = get_reccomendations(word);
       }
     }
     return misspelled;
@@ -63,7 +68,19 @@ you'll be able to find it at my github!
       this.debug = true;
       this.welcome_text = "Welcome to wand";
       this.word_regex = /[\ ,\.\!\;\?]|<br>/;
-      this.word_list = ['wordlist here'];
+      this.word_list = [''];
+      this.wordlist_url = "https://raw.githubusercontent.com/shimaore/password/master/lib/wordlist.json";
+      this.wordlist_request = $.ajax(this.wordlist_url, {
+        cache: true,
+        dataType: "json"
+      }).done((function(_this) {
+        return function(data, textStatus, jqXHR) {
+          if (_this.debug) {
+            console.log("Finished downloading wordlist");
+          }
+          return _this.word_list = data['wordlist'];
+        };
+      })(this));
     }
 
     return Config;

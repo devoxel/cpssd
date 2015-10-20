@@ -21,6 +21,7 @@ countStr = (string, regex) ->
       count += 1
   return count
 
+
 format_misspelling = (l) ->
   s = ""
   for word, other_spellings of l
@@ -29,19 +30,33 @@ format_misspelling = (l) ->
       s += "? #{spelling}<br>"
   return s
 
+
+get_reccomendations = (word) ->
+  return ["asdf", 'casdf']
+
+
 check_spelling = (string, word_regex, word_list) ->
   misspelled = {}
   for word in string.split(word_regex)
     if word not in misspelled and word.length > 0 and word.toLowerCase() not in word_list
-      misspelled[word] = ['put reccomendations here']
+      misspelled[word] = get_reccomendations(word)
   return misspelled
+
 
 class Config
   constructor: ->
     @debug = true
     @welcome_text = "Welcome to wand"
     @word_regex = /[\ ,\.\!\;\?]|<br>/
-    @word_list = ['wordlist here'] 
+    @word_list = ['']
+    @wordlist_url = "https://raw.githubusercontent.com/shimaore/password/master/lib/wordlist.json"
+    @wordlist_request = $.ajax(@wordlist_url,
+      cache: true,
+      dataType: "json"
+    ).done (data, textStatus, jqXHR) =>
+      console.log("Finished downloading wordlist") if @debug
+      @word_list = data['wordlist']
+
 
 class EditorModel
   constructor: (@config, @view) ->
@@ -89,7 +104,7 @@ class EditorModel
     """
 
   drawInfo: ->
-    @info.html(@infoHTML(@word_count, @misspelled)) 
+    @info.html(@infoHTML(@word_count, @misspelled))
 
   updateText: ->
     if @text != @textarea.html()
