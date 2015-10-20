@@ -33,7 +33,6 @@ you'll be able to find it at my github!
 
   format_misspelling = function(l) {
     var i, len, other_spellings, s, spelling, word;
-    console.log(l);
     s = "";
     for (word in l) {
       other_spellings = l[word];
@@ -49,11 +48,10 @@ you'll be able to find it at my github!
   check_spelling = function(string, word_regex, word_list) {
     var i, len, misspelled, ref, ref1, word;
     misspelled = {};
-    console.log(string.split(word_regex));
     ref = string.split(word_regex);
     for (i = 0, len = ref.length; i < len; i++) {
       word = ref[i];
-      if (word.length > 0 && (ref1 = word.toLowerCase(), indexOf.call(word_list, ref1) < 0)) {
+      if (indexOf.call(misspelled, word) < 0 && word.length > 0 && (ref1 = word.toLowerCase(), indexOf.call(word_list, ref1) < 0)) {
         misspelled[word] = ['put reccomendations here'];
       }
     }
@@ -65,7 +63,7 @@ you'll be able to find it at my github!
       this.debug = true;
       this.welcome_text = "Welcome to wand";
       this.word_regex = /[\ ,\.\!\;\?]|<br>/;
-      this.word_list = ["the", "and", "cat", "welcome", "to", "wand"];
+      this.word_list = ['wordlist here'];
     }
 
     return Config;
@@ -99,7 +97,7 @@ you'll be able to find it at my github!
 
     EditorModel.prototype.initInfoArea = function() {
       this.updateInfo();
-      this.container.append("<div id=\"info\">\nWand /*\n<br><br>\nword count: " + this.word_count + "\n<br>\nmisspelled words:\n<br>\n" + (format_misspelling(this.misspelled)) + "\n</div>");
+      this.container.append("<div id=\"info\">\n" + (this.infoHTML(this.word_count, this.misspelled)) + "\n</div>");
       return this.info = $("#info");
     };
 
@@ -108,20 +106,26 @@ you'll be able to find it at my github!
       return this.misspelled = check_spelling(this.text, this.config.word_regex, this.config.word_list);
     };
 
+    EditorModel.prototype.infoHTML = function(word_count, mispellings) {
+      return "Wand /*\n<br><br>\nword count: " + this.word_count + "\n<br>\nmisspelled words:\n<br>\n" + (format_misspelling(this.misspelled));
+    };
+
     EditorModel.prototype.drawInfo = function() {
-      return this.info.html("Wand /*\n<br><br>\nword count: " + this.word_count + "\n<br>\nmisspelled words:\n<br>\n" + (format_misspelling(this.misspelled)));
+      return this.info.html(this.infoHTML(this.word_count, this.misspelled));
     };
 
     EditorModel.prototype.updateText = function() {
-      this.text = this.textarea.html();
-      this.updateInfo();
-      return this.drawInfo();
+      if (this.text !== this.textarea.html()) {
+        this.text = this.textarea.html();
+        this.updateInfo();
+        return this.drawInfo();
+      }
     };
 
     EditorModel.prototype.updateSize = function() {
       var h, w;
-      h = $(window).innerHeight() / 20 * 19;
       w = $(window).innerWidth() / 20 * 19;
+      h = $(window).innerHeight() / 20 * 19;
       this.container_height = h + "px";
       return this.container_width = w + "px";
     };
@@ -195,5 +199,3 @@ you'll be able to find it at my github!
   editor_controller = new EditorController(config, editor_model);
 
 }).call(this);
-
-//# sourceMappingURL=main.js.map

@@ -22,7 +22,6 @@ countStr = (string, regex) ->
   return count
 
 format_misspelling = (l) ->
-  console.log(l)
   s = ""
   for word, other_spellings of l
     s += "#{word}<br>"
@@ -32,9 +31,8 @@ format_misspelling = (l) ->
 
 check_spelling = (string, word_regex, word_list) ->
   misspelled = {}
-  console.log string.split(word_regex)
   for word in string.split(word_regex)
-    if word.length > 0 and word.toLowerCase() not in word_list
+    if word not in misspelled and word.length > 0 and word.toLowerCase() not in word_list
       misspelled[word] = ['put reccomendations here']
   return misspelled
 
@@ -43,7 +41,7 @@ class Config
     @debug = true
     @welcome_text = "Welcome to wand"
     @word_regex = /[\ ,\.\!\;\?]|<br>/
-    @word_list = ["the", "and", "cat", "welcome", "to", "wand"]
+    @word_list = ['wordlist here'] 
 
 class EditorModel
   constructor: (@config, @view) ->
@@ -70,13 +68,7 @@ class EditorModel
     @updateInfo()
     @container.append """
     <div id="info">
-    Wand /*
-    <br><br>
-    word count: #{@word_count}
-    <br>
-    misspelled words:
-    <br>
-    #{format_misspelling(@misspelled)}
+    #{@infoHTML(@word_count, @misspelled)}
     </div>
     """
     @info = $("#info")
@@ -85,8 +77,8 @@ class EditorModel
     @word_count = countStr(@text, @config.word_regex)
     @misspelled = check_spelling(@text, @config.word_regex, @config.word_list)
 
-  drawInfo: ->
-    @info.html """
+  infoHTML: (word_count, mispellings) ->
+    return """
     Wand /*
     <br><br>
     word count: #{@word_count}
@@ -96,14 +88,18 @@ class EditorModel
     #{format_misspelling(@misspelled)}
     """
 
+  drawInfo: ->
+    @info.html(@infoHTML(@word_count, @misspelled)) 
+
   updateText: ->
-    @text = @textarea.html()
-    @updateInfo()
-    @drawInfo()
+    if @text != @textarea.html()
+      @text = @textarea.html()
+      @updateInfo()
+      @drawInfo()
 
   updateSize: ->
-    h = $(window).innerHeight() /20 * 19
     w = $(window).innerWidth()  /20 * 19
+    h = $(window).innerHeight() /20 * 19
     @container_height = "#{h}px"
     @container_width  = "#{w}px"
 
