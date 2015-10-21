@@ -8,7 +8,7 @@ Refer to README for more information
  */
 
 (function() {
-  var Config, EditorController, EditorModel, EditorView, check_spelling, config, countStr, editor_controller, editor_model, editor_view, format_misspelling, get_reccomendations_edit_distance,
+  var Config, EditorController, EditorModel, EditorView, check_spelling, config, countStr, editor_controller, editor_model, editor_view, get_reccomendations_edit_distance,
     indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   EditorView = (function() {
@@ -59,8 +59,23 @@ Refer to README for more information
       return this.container.css("width", this.container_width);
     };
 
+    EditorView.prototype.format_misspelling = function(l) {
+      var i, len, other_spellings, s, spelling, word;
+      s = "";
+      for (word in l) {
+        other_spellings = l[word];
+        s += "<ul class='misspelling'><b>" + word + "</b>";
+        for (i = 0, len = other_spellings.length; i < len; i++) {
+          spelling = other_spellings[i];
+          s += "<li>" + spelling + "</li>";
+        }
+        s += "</ul>";
+      }
+      return s;
+    };
+
     EditorView.prototype.infoHTML = function(word_count, mispellings) {
-      return "Wand /*\n<br><br>\nword count: " + this.word_count + "\n<br>\nmisspelled words:\n<br>\n" + (format_misspelling(this.misspelled));
+      return "<h1>Wand /*</h1>\nword count: " + this.word_count + "\n<br>\nmisspelled words:\n<br>\n" + (this.format_misspelling(this.misspelled));
     };
 
     return EditorView;
@@ -78,7 +93,9 @@ Refer to README for more information
   countStr = function(string, regex) {
     var count, i, len, ref, word;
     count = 0;
-    ref = string.split(regex);
+    console.log(string);
+    console.log(string.match(regex));
+    ref = string.match(regex);
     for (i = 0, len = ref.length; i < len; i++) {
       word = ref[i];
       if (word.length > 0) {
@@ -86,20 +103,6 @@ Refer to README for more information
       }
     }
     return count;
-  };
-
-  format_misspelling = function(l) {
-    var i, len, other_spellings, s, spelling, word;
-    s = "";
-    for (word in l) {
-      other_spellings = l[word];
-      s += word + "<br>";
-      for (i = 0, len = other_spellings.length; i < len; i++) {
-        spelling = other_spellings[i];
-        s += "? " + spelling + "<br>";
-      }
-    }
-    return s;
   };
 
   get_reccomendations_edit_distance = function(word, length, wordlist) {
@@ -112,10 +115,10 @@ Refer to README for more information
     if (word_list.length === 0) {
       return misspelled;
     }
-    ref = string.split(word_regex);
+    ref = string.match(word_regex);
     for (i = 0, len = ref.length; i < len; i++) {
       word = ref[i];
-      if (indexOf.call(misspelled, word) < 0 && word.length > 0 && (ref1 = word.toLowerCase(), indexOf.call(word_list, ref1) < 0)) {
+      if (indexOf.call(misspelled, word) < 0 && word.length > 1 && (ref1 = word.toLowerCase(), indexOf.call(word_list, ref1) < 0)) {
         misspelled[word] = get_reccomendations_edit_distance(word);
       }
     }
@@ -131,6 +134,7 @@ Refer to README for more information
       }
       this.text = this.config.welcome_text;
       this.container = this.view.container;
+      this.word_regex = /[^\W]([A-Za-z]+)[^\W]/ig;
     }
 
     EditorModel.prototype.updateText = function() {
@@ -142,8 +146,8 @@ Refer to README for more information
     };
 
     EditorModel.prototype.updateInfo = function() {
-      this.view.word_count = countStr(this.text, this.config.word_regex);
-      return this.view.misspelled = check_spelling(this.text, this.config.word_regex, this.config.word_list, this.config.recommend_length);
+      this.view.word_count = countStr(this.text, this.word_regex);
+      return this.view.misspelled = check_spelling(this.text, this.word_regex, this.config.word_list, this.config.recommend_length);
     };
 
     EditorModel.prototype.updateWindowSize = function() {
@@ -169,6 +173,7 @@ Refer to README for more information
       if (this.config.debug) {
         console.log("+ Initiating EditorController");
       }
+      this.skipped_renders = 0;
       this.setupEvents();
     }
 
@@ -178,9 +183,18 @@ Refer to README for more information
           return _this.model.updateWindowSize();
         };
       })(this));
-      return this.model.container.on('keydown keyup focus', (function(_this) {
+      return this.model.container.on('keypress focus', (function(_this) {
         return function(event) {
-          return _this.model.updateText();
+          if (event.type === "keypress") {
+            if (_this.skipped_renders < 4 || event.which === 32 || event.which === 13 || event.which === 8 || event.which === 17) {
+              _this.model.updateText();
+              return _this.skipped_renders = 0;
+            } else {
+              return _this.skipped_renders += 1;
+            }
+          } else {
+            return _this.model.updateText();
+          }
         };
       })(this));
     };
@@ -201,7 +215,7 @@ Refer to README for more information
     function Config() {
       this.debug = true;
       this.welcome_text = "Welcome to wand";
-      this.word_regex = /[\ ,\.\!\;\?]|<br>/;
+      this.welcome_text_length = 3;
       this.word_list = [];
       this.wordlist_url = "https://raw.githubusercontent.com/sindresorhus/word-list/master/words.txt";
       this.wordlist_request = $.ajax(this.wordlist_url, {

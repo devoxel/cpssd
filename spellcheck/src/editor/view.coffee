@@ -8,6 +8,7 @@ Refer to README for more information
 # editor/view.coffee
 # - conatins the EditorView class
 
+
 class EditorView
   # -> This charge is of the view of the model
   constructor: (@config) ->
@@ -55,13 +56,22 @@ class EditorView
     @container.css("height", @container_height)
     @container.css("width", @container_width)
 
+  format_misspelling: (l) ->
+    # A function that returns a html representation of a mispelling object
+    s = ""
+    for word, other_spellings of l
+      s += "<ul class='misspelling'><b>#{word}</b>"
+      for spelling in other_spellings
+        s += "<li>#{spelling}</li>"
+      s += "</ul>"
+    return s
+
   infoHTML: (word_count, mispellings) ->
     return """
-    Wand /*
-    <br><br>
+    <h1>Wand /*</h1>
     word count: #{@word_count}
     <br>
     misspelled words:
     <br>
-    #{format_misspelling(@misspelled)}
+    #{@format_misspelling(@misspelled)}
     """

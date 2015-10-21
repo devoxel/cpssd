@@ -14,7 +14,7 @@ class Config
   constructor: ->
     @debug = true
     @welcome_text = "Welcome to wand"
-    @word_regex = /[\ ,\.\!\;\?]|<br>/
+    @welcome_text_length = 3
     @word_list = []
     @wordlist_url = "https://raw.githubusercontent.com/sindresorhus/word-list/master/words.txt"
     @wordlist_request = $.ajax(@wordlist_url,

@@ -8,6 +8,7 @@ Refer to README for more information
 # editor/view.coffee
 # - conatins the EditorView class
 
+
 class EditorView
   # -> This charge is of the view of the model
   constructor: (@config) ->
@@ -55,15 +56,24 @@ class EditorView
     @container.css("height", @container_height)
     @container.css("width", @container_width)
 
+  format_misspelling: (l) ->
+    # A function that returns a html representation of a mispelling object
+    s = ""
+    for word, other_spellings of l
+      s += "<ul class='misspelling'><b>#{word}</b>"
+      for spelling in other_spellings
+        s += "<li>#{spelling}</li>"
+      s += "</ul>"
+    return s
+
   infoHTML: (word_count, mispellings) ->
     return """
-    Wand /*
-    <br><br>
+    <h1>Wand /*</h1>
     word count: #{@word_count}
     <br>
     misspelled words:
     <br>
-    #{format_misspelling(@misspelled)}
+    #{@format_misspelling(@misspelled)}
     """
 
 ###
@@ -79,24 +89,15 @@ Refer to README for more information
 
 
 countStr = (string, regex) ->
-  # countstr(string, regex) ->
-  #   counts the amount of occurences of any given regex in a string and returns
-  #   the length
+  # -> counts the amount of occurences of any given regex in a string
+  # and returns the length
   count = 0
-  for word in string.split(regex)
+  console.log string
+  console.log string.match regex
+  for word in string.match(regex)
     if word.length > 0
       count += 1
   return count
-
-
-format_misspelling = (l) ->
-  # A function that returns a html representation of a mispelling object
-  s = ""
-  for word, other_spellings of l
-    s += "#{word}<br>"
-    for spelling in other_spellings
-      s += "? #{spelling}<br>"
-  return s
 
 
 get_reccomendations_edit_distance = (word, length, wordlist) ->
@@ -105,15 +106,16 @@ get_reccomendations_edit_distance = (word, length, wordlist) ->
 
 
 check_spelling = (string, word_regex, word_list, recommend_length) ->
-  # check_spelling(string, regex, word_list, recommend_length) ->
-  #   returns a list of all mispelled words in a string with reccomendations
+  # -> returns a list of all mispelled words in a string with recomendations
   misspelled = {}
-  if word_list.length == 0 # we can assume the word_list hasn't finished
+  if word_list.length == 0 # we can assume the word_list hasn't finished dl
     return misspelled
-  for word in string.split(word_regex)
-    if word not in misspelled and word.length > 0 and word.toLowerCase() not in word_list
+  for word in string.match(word_regex)
+    if word not in misspelled and word.length > 1 and
+                              word.toLowerCase() not in word_list
       misspelled[word] = get_reccomendations_edit_distance(word)
   return misspelled
+
 
 class EditorModel
   # -> in charge of the data the editor looks after and how it is managed.
@@ -121,6 +123,7 @@ class EditorModel
     console.log("+ Iniating Model") if @config.debug
     @text = @config.welcome_text
     @container = @view.container # controller needs to set events up on this
+    @word_regex = /[^\W]([A-Za-z]+)[^\W]/ig
 
   updateText: ->
     # Update the text
@@ -130,13 +133,11 @@ class EditorModel
       @view.drawInfo()
 
   updateInfo: ->
-    # Update the Info panel
-
     # We don't need the values here, so don't bother storing them as attributes
     # note: if the controller started needing these we would need to store them
     # as attributes of the model (and then set the view ones are references)
-    @view.word_count = countStr(@text, @config.word_regex)
-    @view.misspelled = check_spelling(@text, @config.word_regex, @config.word_list,
+    @view.word_count = countStr(@text, @word_regex)
+    @view.misspelled = check_spelling(@text, @word_regex, @config.word_list,
                                  @config.recommend_length)
 
   updateWindowSize: ->
@@ -160,6 +161,7 @@ class EditorController
   # (eg. settings)
   constructor: (@config, @model) ->
     console.log("+ Initiating EditorController") if @config.debug
+    @skipped_renders = 0
     @setupEvents()
 
   setupEvents: ->
@@ -167,8 +169,15 @@ class EditorController
     $(window).resize( =>
       @model.updateWindowSize()
     )
-    @model.container.on('keydown keyup focus', (event) =>
-      @model.updateText()
+    @model.container.on('keypress focus', (event) =>
+      if event.type == "keypress"
+        if @skipped_renders < 4 or event.which == 32 or event.which == 13 or event.which == 8 or event.which == 17
+          @model.updateText()
+          @skipped_renders = 0
+        else
+          @skipped_renders += 1
+      else
+        @model.updateText()
     )
 
 ###
@@ -187,7 +196,7 @@ class Config
   constructor: ->
     @debug = true
     @welcome_text = "Welcome to wand"
-    @word_regex = /[\ ,\.\!\;\?]|<br>/
+    @welcome_text_length = 3
     @word_list = []
     @wordlist_url = "https://raw.githubusercontent.com/sindresorhus/word-list/master/words.txt"
     @wordlist_request = $.ajax(@wordlist_url,
