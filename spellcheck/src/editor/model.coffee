@@ -6,10 +6,14 @@ Refer to README for more information
 ###
 
 # editor/model.coffee
-# - conatins the EditorModel class
+# - conatins the EditorModel class and the spell checking functions
+#   note: these functions may be moved eventually
 
 
 countStr = (string, regex) ->
+  # countstr(string, regex) ->
+  #   counts the amount of occurences of any given regex in a string and returns
+  #   the length
   count = 0
   for word in string.split(regex)
     if word.length > 0
@@ -18,6 +22,7 @@ countStr = (string, regex) ->
 
 
 format_misspelling = (l) ->
+  # A function that returns a html representation of a mispelling object
   s = ""
   for word, other_spellings of l
     s += "#{word}<br>"
@@ -26,11 +31,14 @@ format_misspelling = (l) ->
   return s
 
 
-get_reccomendations_edit_distance = (word, length) ->
+get_reccomendations_edit_distance = (word, length, wordlist) ->
+  # the meat of the program, todo
   return ["asdf", 'casdf']
 
 
-check_spelling = (string, word_regex, word_list, length_of_reccomends) ->
+check_spelling = (string, word_regex, word_list, recommend_length) ->
+  # check_spelling(string, regex, word_list, recommend_length) ->
+  #   returns a list of all mispelled words in a string with reccomendations
   misspelled = {}
   if word_list.length == 0 # we can assume the word_list hasn't finished
     return misspelled
@@ -40,67 +48,28 @@ check_spelling = (string, word_regex, word_list, length_of_reccomends) ->
   return misspelled
 
 class EditorModel
+  # -> in charge of the data the editor looks after and how it is managed.
   constructor: (@config, @view) ->
     console.log("+ Iniating Model") if @config.debug
     @text = @config.welcome_text
-
-    @initContainer()
-    @initTextArea()
-    @initInfoArea()
-    @updateWindowSize()
-
-  initContainer: ->
-    $('body').append '<div id="container"></div>'
-    @container = $('#container')
-
-  initTextArea: ->
-    @updateSize()
-    @container.append """
-    <div id="text" contenteditable="true" spellcheck="false">#{@config.welcome_text}</div>
-    """
-    @textarea = $("#text")
-
-  initInfoArea: ->
-    @updateInfo()
-    @container.append """
-    <div id="info">
-    #{@infoHTML(@word_count, @misspelled)}
-    </div>
-    """
-    @info = $("#info")
-
-  updateInfo: ->
-    @word_count = countStr(@text, @config.word_regex)
-    @misspelled = check_spelling(@text, @config.word_regex, @config.word_list,
-                                 @config.length_of_reccomends)
-
-  infoHTML: (word_count, mispellings) ->
-    return """
-    Wand /*
-    <br><br>
-    word count: #{@word_count}
-    <br>
-    misspelled words:
-    <br>
-    #{format_misspelling(@misspelled)}
-    """
-
-  drawInfo: ->
-    @info.html(@infoHTML(@word_count, @misspelled))
+    @container = @view.container # controller needs to set events up on this
 
   updateText: ->
-    if @text != @textarea.html()
-      @text = @textarea.html()
+    # Update the text
+    if @text != @view.textarea.html()
+      @text = @view.textarea.html()
       @updateInfo()
-      @drawInfo()
+      @view.drawInfo()
 
-  updateSize: ->
-    w = $(window).innerWidth()  /20 * 19
-    h = $(window).innerHeight() /20 * 19
-    @container_height = "#{h}px"
-    @container_width  = "#{w}px"
+  updateInfo: ->
+    # Update the Info panel
+
+    # We don't need the values here, so don't bother storing them as attributes
+    # note: if the controller started needing these we would need to store them
+    # as attributes of the model (and then set the view ones are references)
+    @view.word_count = countStr(@text, @config.word_regex)
+    @view.misspelled = check_spelling(@text, @config.word_regex, @config.word_list,
+                                 @config.recommend_length)
 
   updateWindowSize: ->
-    @resize = true
-    @updateSize()
-    @view.update(@)
+    @view.updateWindowSize()

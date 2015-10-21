@@ -9,6 +9,8 @@ Refer to README for more information
 # - contains the Config class
 
 class Config
+  # The config class handles all of the constant-like data, as well as defaults
+  # for things like edit message, and debug mode.
   constructor: ->
     @debug = true
     @welcome_text = "Welcome to wand"
@@ -22,4 +24,4 @@ class Config
     ).done (data, textStatus, jqXHR) =>
       console.log("Finished downloading wordlist") if @debug
       @word_list = data.split(/\n/)
-    @length_of_reccomends = 4
+    @length_of_reccomends = 4 # the amount of reccomended words provided

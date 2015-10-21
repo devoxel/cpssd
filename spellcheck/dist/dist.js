@@ -17,17 +17,50 @@ Refer to README for more information
       if (this.config.debug) {
         console.log("+ Initiating EditorView");
       }
+      this.word_count = this.config.welcome_text_length;
+      this.misspelled = [];
+      this.initContainer();
+      this.initTextArea();
+      this.initInfoArea();
+      this.updateWindowSize();
     }
 
-    EditorView.prototype.update = function(model) {
-      if (model.resize === true) {
-        if (this.config.debug) {
-          console.log("+ Resizing canvas");
-        }
-        model.container.css("height", model.container_height);
-        model.container.css("width", model.container_width);
-        return model.resize = false;
-      }
+    EditorView.prototype.initContainer = function() {
+      $('body').append('<div id="container"></div>');
+      return this.container = $('#container');
+    };
+
+    EditorView.prototype.initTextArea = function() {
+      this.updateSize();
+      this.container.append("<div id=\"text\" contenteditable=\"true\" spellcheck=\"false\">" + this.config.welcome_text + "</div>");
+      return this.textarea = $("#text");
+    };
+
+    EditorView.prototype.initInfoArea = function() {
+      this.container.append("<div id=\"info\">\n" + (this.infoHTML(this.word_count, this.misspelled)) + "\n</div>");
+      return this.info = $("#info");
+    };
+
+    EditorView.prototype.drawInfo = function() {
+      return this.info.html(this.infoHTML(this.word_count, this.misspelled));
+    };
+
+    EditorView.prototype.updateSize = function() {
+      var h, w;
+      w = $(window).innerWidth() / 20 * 19;
+      h = $(window).innerHeight() / 20 * 19;
+      this.container_height = h + "px";
+      return this.container_width = w + "px";
+    };
+
+    EditorView.prototype.updateWindowSize = function() {
+      this.updateSize();
+      this.container.css("height", this.container_height);
+      return this.container.css("width", this.container_width);
+    };
+
+    EditorView.prototype.infoHTML = function(word_count, mispellings) {
+      return "Wand /*\n<br><br>\nword count: " + this.word_count + "\n<br>\nmisspelled words:\n<br>\n" + (format_misspelling(this.misspelled));
     };
 
     return EditorView;
@@ -69,11 +102,11 @@ Refer to README for more information
     return s;
   };
 
-  get_reccomendations_edit_distance = function(word, length) {
+  get_reccomendations_edit_distance = function(word, length, wordlist) {
     return ["asdf", 'casdf'];
   };
 
-  check_spelling = function(string, word_regex, word_list, length_of_reccomends) {
+  check_spelling = function(string, word_regex, word_list, recommend_length) {
     var i, len, misspelled, ref, ref1, word;
     misspelled = {};
     if (word_list.length === 0) {
@@ -97,62 +130,24 @@ Refer to README for more information
         console.log("+ Iniating Model");
       }
       this.text = this.config.welcome_text;
-      this.initContainer();
-      this.initTextArea();
-      this.initInfoArea();
-      this.updateWindowSize();
+      this.container = this.view.container;
     }
 
-    EditorModel.prototype.initContainer = function() {
-      $('body').append('<div id="container"></div>');
-      return this.container = $('#container');
-    };
-
-    EditorModel.prototype.initTextArea = function() {
-      this.updateSize();
-      this.container.append("<div id=\"text\" contenteditable=\"true\" spellcheck=\"false\">" + this.config.welcome_text + "</div>");
-      return this.textarea = $("#text");
-    };
-
-    EditorModel.prototype.initInfoArea = function() {
-      this.updateInfo();
-      this.container.append("<div id=\"info\">\n" + (this.infoHTML(this.word_count, this.misspelled)) + "\n</div>");
-      return this.info = $("#info");
-    };
-
-    EditorModel.prototype.updateInfo = function() {
-      this.word_count = countStr(this.text, this.config.word_regex);
-      return this.misspelled = check_spelling(this.text, this.config.word_regex, this.config.word_list, this.config.length_of_reccomends);
-    };
-
-    EditorModel.prototype.infoHTML = function(word_count, mispellings) {
-      return "Wand /*\n<br><br>\nword count: " + this.word_count + "\n<br>\nmisspelled words:\n<br>\n" + (format_misspelling(this.misspelled));
-    };
-
-    EditorModel.prototype.drawInfo = function() {
-      return this.info.html(this.infoHTML(this.word_count, this.misspelled));
-    };
-
     EditorModel.prototype.updateText = function() {
-      if (this.text !== this.textarea.html()) {
-        this.text = this.textarea.html();
+      if (this.text !== this.view.textarea.html()) {
+        this.text = this.view.textarea.html();
         this.updateInfo();
-        return this.drawInfo();
+        return this.view.drawInfo();
       }
     };
 
-    EditorModel.prototype.updateSize = function() {
-      var h, w;
-      w = $(window).innerWidth() / 20 * 19;
-      h = $(window).innerHeight() / 20 * 19;
-      this.container_height = h + "px";
-      return this.container_width = w + "px";
+    EditorModel.prototype.updateInfo = function() {
+      this.view.word_count = countStr(this.text, this.config.word_regex);
+      return this.view.misspelled = check_spelling(this.text, this.config.word_regex, this.config.word_list, this.config.recommend_length);
     };
 
     EditorModel.prototype.updateWindowSize = function() {
-      this.resize = true;
-      this.updateSize();
-      return this.view.update(this);
+      return this.view.updateWindowSize();
     };
 
     return EditorModel;
@@ -168,9 +163,9 @@ Refer to README for more information
    */
 
   EditorController = (function() {
-    function EditorController(config1, model1) {
+    function EditorController(config1, model) {
       this.config = config1;
-      this.model = model1;
+      this.model = model;
       if (this.config.debug) {
         console.log("+ Initiating EditorController");
       }
