@@ -7,10 +7,12 @@
     "email": "aaron.delaney29@mail.dcu.ie"
   },
   "devDependencies": {
-    "coffee-script": "latest"
+    "coffee-script": "latest",
+    "coffeescript-concat": "latest",
+    "watch": "latest"
   },
   "scripts": {
-    "build": "coffee -o dist/ -c src/main.coffee",
-    "build:watch": "coffee --map -w -o dist/ -c src/main.coffee"
+    "build": "coffeescript-concat  -I src/ -o dist/dist.coffee | coffee -c dist/dist.coffee",
+    "build:watch": "watch 'npm run build'"
   }
 }

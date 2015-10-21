@@ -62,7 +62,11 @@ This will build the coffeescript any time it detects a change.
 
 - [coffee-script](http://coffeescript.org/)
 
-- [jquery](https://jquery.com/)
+- [coffeescript-concat](https://www.npmjs.com/package/coffeescript-concat)
+
+- [watch](https://www.npmjs.com/package/watch)
+
+- [jQuery](https://jquery.com/)
 
 - [word-list](https://github.com/sindresorhus/word-list)
 

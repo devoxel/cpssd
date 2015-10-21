@@ -230,5 +230,3 @@ position or what's currently being rendered.
   editor_controller = new EditorController(config, editor_model);
 
 }).call(this);
-
-//# sourceMappingURL=main.js.map
