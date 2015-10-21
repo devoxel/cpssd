@@ -3,12 +3,17 @@ body {
   background-color: #002b36;
 }
 
+h1 {
+  padding: 0 0 0 0;
+  margin: 0 0 0 0;
+}
+
 #container {
   position: absolute;
 }
 
 #text {
-  font-size: 24px;
+  font-size: 22px;
   padding: 12px 0 0 12px;
   margin: 0;
   margin-left: 20px;
@@ -32,9 +37,14 @@ body {
   background-color: #073642;
   color: #b58900;
   height: 100%;
-  width: 45%;
+  width: 52%;
   top: 0%;
-  left: 55%;
-  border-left: 1px solid  #002b36;
+  left: 50%;
+  border-left: 4px solid  #002b36;
   overflow: auto;
+}
+
+.misspelling {
+  list-style-type: "> ";
+  display: inline-block;
 }
