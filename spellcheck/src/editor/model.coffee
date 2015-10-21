@@ -5,27 +5,6 @@ Created by Aaron Delaney for a DCU Assignment
 Refer to README for more information
 ###
 
-# editor/view.coffee
-# - conatins the EditorView class
-
-class EditorView
-  constructor: (@config) ->
-    console.log("+ Initiating EditorView") if @config.debug
-
-  update: (model) ->
-    if model.resize == true
-      console.log("+ Resizing canvas") if @config.debug
-      model.container.css("height", model.container_height)
-      model.container.css("width", model.container_width)
-      model.resize = false
-
-###
-# Wand
-Created by Aaron Delaney for a DCU Assignment
-
-Refer to README for more information
-###
-
 # editor/model.coffee
 # - conatins the EditorModel class
 
@@ -125,70 +104,3 @@ class EditorModel
     @resize = true
     @updateSize()
     @view.update(@)
-
-###
-# Wand
-Created by Aaron Delaney for a DCU Assignment
-
-Refer to README for more information
-###
-
-# editor/controller.coffee
-# - conatins the EditorController class
-
-class EditorController
-  constructor: (@config, @model) ->
-    console.log("+ Initiating EditorController") if @config.debug
-    @setupEvents()
-
-  setupEvents: ->
-    $(window).resize( => # fat arrow notation means we can pass context too!
-      @model.updateWindowSize()
-    )
-    @model.container.on('keydown keyup focus', (event) =>
-      @model.updateText()
-    )
-
-###
-# Wand
-Created by Aaron Delaney for a DCU Assignment
-
-Refer to README for more information
-###
-
-# config.coffee
-# - contains the Config class
-
-class Config
-  constructor: ->
-    @debug = true
-    @welcome_text = "Welcome to wand"
-    @word_regex = /[\ ,\.\!\;\?]|<br>/
-    @word_list = []
-    @wordlist_url = "https://raw.githubusercontent.com/sindresorhus/word-list/master/words.txt"
-    @wordlist_request = $.ajax(@wordlist_url,
-      cache: true,
-      crossDomain: true,
-      dataType: "text"
-    ).done (data, textStatus, jqXHR) =>
-      console.log("Finished downloading wordlist") if @debug
-      @word_list = data.split(/\n/)
-    @length_of_reccomends = 4
-
-###
-Wand
--> Created by Aaron Delaney for a DCU Assignment
-Refer to:
--> the README, included in the root of this project
-###
-
-
-
-
-
-
-config            = new Config()
-editor_view       = new EditorView(config)
-editor_model      = new EditorModel(config, editor_view)
-editor_controller = new EditorController(config, editor_model)
-

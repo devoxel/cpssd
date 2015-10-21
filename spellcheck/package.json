@@ -12,7 +12,7 @@
     "watch": "latest"
   },
   "scripts": {
-    "build": "coffeescript-concat  -I src/ -o dist/dist.coffee | coffee -c dist/dist.coffee",
+    "build": "coffeescript-concat -R src/ -o dist/dist.coffee | coffee -c dist/dist.coffee",
     "build:watch": "watch 'npm run build'"
   }
 }
