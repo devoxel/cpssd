@@ -1,5 +1,6 @@
 
 ###
+
 # Wand
 Created by Aaron Delaney for a DCU Assignment
 
@@ -11,6 +12,15 @@ you'll be able to find it at my github!
 # Dependincies
 
 - jQuery, to make DOM manipulations work across all browsers
+
+# Wordlist
+- https://github.com/sindresorhus/word-list
+
+# Limitations of wand
+
+Wand was not designed with real world text editing in mind. It's slower than
+most modern text editors and doesn't actually keep track of things like cursor
+position or what's currently being rendered.
 
 ###
 
@@ -31,15 +41,17 @@ format_misspelling = (l) ->
   return s
 
 
-get_reccomendations = (word) ->
+get_reccomendations_edit_distance = (word, length) ->
   return ["asdf", 'casdf']
 
 
-check_spelling = (string, word_regex, word_list) ->
+check_spelling = (string, word_regex, word_list, length_of_reccomends) ->
   misspelled = {}
+  if word_list.length == 0 # we can assume the word_list hasn't finished
+    return misspelled
   for word in string.split(word_regex)
     if word not in misspelled and word.length > 0 and word.toLowerCase() not in word_list
-      misspelled[word] = get_reccomendations(word)
+      misspelled[word] = get_reccomendations_edit_distance(word)
   return misspelled
 
 
@@ -48,14 +60,16 @@ class Config
     @debug = true
     @welcome_text = "Welcome to wand"
     @word_regex = /[\ ,\.\!\;\?]|<br>/
-    @word_list = ['']
-    @wordlist_url = "https://raw.githubusercontent.com/shimaore/password/master/lib/wordlist.json"
+    @word_list = []
+    @wordlist_url = "https://raw.githubusercontent.com/sindresorhus/word-list/master/words.txt"
     @wordlist_request = $.ajax(@wordlist_url,
       cache: true,
-      dataType: "json"
+      crossDomain: true,
+      dataType: "text"
     ).done (data, textStatus, jqXHR) =>
       console.log("Finished downloading wordlist") if @debug
-      @word_list = data['wordlist']
+      @word_list = data.split(/\n/)
+    @length_of_reccomends = 4
 
 
 class EditorModel
@@ -90,7 +104,8 @@ class EditorModel
 
   updateInfo: ->
     @word_count = countStr(@text, @config.word_regex)
-    @misspelled = check_spelling(@text, @config.word_regex, @config.word_list)
+    @misspelled = check_spelling(@text, @config.word_regex, @config.word_list,
+                                 @config.length_of_reccomends)
 
   infoHTML: (word_count, mispellings) ->
     return """
@@ -148,6 +163,7 @@ class EditorController
     @model.container.on('keydown keyup focus', (event) =>
       @model.updateText()
     )
+
 
 config            = new Config()
 editor_view       = new EditorView(config)
