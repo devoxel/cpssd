@@ -93,8 +93,6 @@ Refer to README for more information
   countStr = function(string, regex) {
     var count, i, len, ref, word;
     count = 0;
-    console.log(string);
-    console.log(string.match(regex));
     ref = string.match(regex);
     for (i = 0, len = ref.length; i < len; i++) {
       word = ref[i];
@@ -105,7 +103,7 @@ Refer to README for more information
     return count;
   };
 
-  get_reccomendations_edit_distance = function(word, length, wordlist) {
+  get_reccomendations_edit_distance = function(word, length, word_list) {
     return ["asdf", 'casdf'];
   };
 
@@ -119,7 +117,7 @@ Refer to README for more information
     for (i = 0, len = ref.length; i < len; i++) {
       word = ref[i];
       if (indexOf.call(misspelled, word) < 0 && word.length > 1 && (ref1 = word.toLowerCase(), indexOf.call(word_list, ref1) < 0)) {
-        misspelled[word] = get_reccomendations_edit_distance(word);
+        misspelled[word] = get_reccomendations_edit_distance(word, recommend_length, word_list);
       }
     }
     return misspelled;

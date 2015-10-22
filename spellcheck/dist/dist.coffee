@@ -92,15 +92,13 @@ countStr = (string, regex) ->
   # -> counts the amount of occurences of any given regex in a string
   # and returns the length
   count = 0
-  console.log string
-  console.log string.match regex
   for word in string.match(regex)
     if word.length > 0
       count += 1
   return count
 
 
-get_reccomendations_edit_distance = (word, length, wordlist) ->
+get_reccomendations_edit_distance = (word, length, word_list) ->
   # the meat of the program, todo
   return ["asdf", 'casdf']
 
@@ -113,7 +111,7 @@ check_spelling = (string, word_regex, word_list, recommend_length) ->
   for word in string.match(word_regex)
     if word not in misspelled and word.length > 1 and
                               word.toLowerCase() not in word_list
-      misspelled[word] = get_reccomendations_edit_distance(word)
+      misspelled[word] = get_reccomendations_edit_distance(word, recommend_length, word_list)
   return misspelled
 
 
