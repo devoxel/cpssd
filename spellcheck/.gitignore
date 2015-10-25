@@ -93,3 +93,6 @@ Temporary Items
 
 # Javascript Map Files for debug
 *.js.map
+
+dist/dist.coffee
+dist/dist.js
