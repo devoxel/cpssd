@@ -1,8 +1,7 @@
 ###
-Wand
--> Created by Aaron Delaney for a DCU Assignment
-Refer to:
--> the README, included in the root of this project
+# Wand
+- Created by Aaron Delaney for a DCU Assignment
+~ For details refer to the README in the root of this project
 ###
 
 #= require Config
