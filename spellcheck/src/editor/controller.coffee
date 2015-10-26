@@ -25,11 +25,8 @@ class EditorController
     )
     @model.container.on('keypress focus', (event) =>
       if event.type == "keypress"
-        if @skipped_renders < 4 or event.which == 32 or event.which == 13 or event.which == 8 or event.which == 17
+        if event.which == 32 or event.which == 13 or event.which == 8 or event.which == 17
           @model.updateText()
-          @skipped_renders = 0
-        else
-          @skipped_renders += 1
       else
         @model.updateText()
     )

@@ -7,47 +7,82 @@
 # editor/model.coffee
 # - conatins the EditorModel class and the spell checking functions
 #   note: these functions may be moved eventually
+min = (to_compare) ->
+  smallest = to_compare[0]
+  for elm in to_compare
+    if elm < smallest
+      return smallest
+  return smallest
 
 
-countStr = (string, regex) ->
+countStr = (words) ->
   # -> counts the amount of occurences of any given regex in a string
   # and returns the length
-  count = 0
-  for word in string.match(regex)
-    if word.length > 0
-      count += 1
-  return count
+  return words.length
 
 
-get_reccomendations_edit_distance = (word, length, word_list) ->
-  # the meat of the program, todo
-  return ["asdf", 'casdf']
+edit_distance = (a, b) ->
+  last_col = [0..a.length]
+  current_col = [0]
+  for j in [0..b.length]
+    for i in [1..a.length]
+      if a[i-1] == b[j-1]
+        current_col.push(last_col[i-1])
+      else
+        x = min([last_col[i-1], last_col[i], current_col[i-1]])
+        current_col.push(x + 1)
+    temp_col = current_col
+    last_col = current_col
+    current_col = [temp_col[0]+1]
+  return last_col[a.length]
 
 
-check_spelling = (string, word_regex, word_list, recommend_length) ->
+edit_distance_reccomendations = (word, total_reccomends, word_list) ->
+  best_words = []
+  while best_words.length < total_reccomends
+    i = 0
+    best_score = -1
+    best_word = false
+    while i < word_list.length
+      current_word = word_list[i]
+      score = edit_distance(word, current_word)
+      if best_score == -1 and current_word not in best_words
+        best_word = current_word
+        best_score = score
+      if score < best_score and current_word not in best_words
+        best_word = current_word
+        best_score = score
+      i = i + 1
+    best_words.push(best_word)
+
+  return best_words
+
+
+check_spelling = (words, word_list, total_reccomends, already_mispelled) ->
   # -> returns a list of all mispelled words in a string with recomendations
   misspelled = {}
   if word_list.length == 0 # we can assume the word_list hasn't finished dl
     return misspelled
-  for word in string.match(word_regex)
-    if word not in misspelled and word.length > 1 and
-                              word.toLowerCase() not in word_list
-      misspelled[word] = get_reccomendations_edit_distance(word, recommend_length, word_list)
+  for word in words
+    if already_mispelled[word] != undefined
+      misspelled[word] = already_mispelled[word]
+    else if word not in misspelled and word.toLowerCase() not in word_list
+      misspelled[word] = edit_distance_reccomendations( word, total_reccomends, word_list)
   return misspelled
 
 
 class EditorModel
   # -> in charge of the data the editor looks after and how it is managed.
   constructor: (@config, @view) ->
-    console.log("+ Iniating Model") if @config.debug
+    console.log("+ Initiating Model") if @config.debug
     @text = @config.welcome_text
     @container = @view.container # controller needs to set events up on this
-    @word_regex = /[^\W]([A-Za-z]+)[^\W]/ig
+    @word_regex = /[a-zA-Z]+/ig
 
   updateText: ->
     # Update the text
-    if @text != @view.textarea.html()
-      @text = @view.textarea.html()
+    if @text != @view.textarea.val()
+      @text = @view.textarea.val()
       @updateInfo()
       @view.drawInfo()
 
@@ -55,9 +90,11 @@ class EditorModel
     # We don't need the values here, so don't bother storing them as attributes
     # note: if the controller started needing these we would need to store them
     # as attributes of the model (and then set the view ones are references)
-    @view.word_count = countStr(@text, @word_regex)
-    @view.misspelled = check_spelling(@text, @word_regex, @config.word_list,
-                                 @config.recommend_length)
+    words = @text.match(@word_regex)
+    if words.length >= 1
+      @view.word_count = countStr(words)
+      @view.misspelled = check_spelling(words, @config.word_list,
+                                   @config.recommend_length, @view.misspelled)
 
   updateWindowSize: ->
     @view.updateWindowSize()

@@ -29,7 +29,7 @@ class EditorView
   initTextArea: ->
     @updateSize()
     @container.append """
-    <div id="text" contenteditable="true" spellcheck="false">#{@config.welcome_text}</div>
+    <textarea id="text" spellcheck="false">#{@config.welcome_text}</textarea>
     """
     @textarea = $("#text")
 

@@ -13,6 +13,13 @@ h1 {
 }
 
 #text {
+  border: none;
+  overflow: auto;
+  outline: none;
+
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
   font-size: 22px;
   padding: 12px 0 0 12px;
   margin: 0;
