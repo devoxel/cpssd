@@ -1,55 +1,29 @@
-# Closed Circuit 
+# Closed Circuit
 
-Go to work. Eat. Go to sleep. Wake up. Repeat.
+A text based adventure game by Aaron Delaney for CPSSD1.
 
-## Help
+## Goals
 
-CC is a text based adventure game. To play you just type commands to 
-your character. Here are all the basic commands:
+- Approach modeling the game using a data-driven approach
+- Make the game somewhat engaging, but short
+- Have a good input engine, work out what the player means to do
+- Cross-platform support (which python does great)
 
-#### Movement
+### This game is divided into two parts:
 
-- Go
+#### Game Engine (located in `src/`)
 
-- Climb
+The game engine is the thing that keeps the game moving. It should keep track
+of game states, handle the input and views and just make the game work.
 
-- Hide
+It uses game assets to build the game.
 
-- Wait
+Documentation about how the game engine works is located in the README file
+in the base of the `src/` folder
 
-- Sneak
+#### Game Assets (located in `assets/`)
 
-#### Combat
+The game assets area all the aspects of the game that are unique to the game.
 
-- Hit
-
-- Kick
-
-- Knock
-
-#### Interaction with items
-
-- Pick up
-
-- Eat
-
-- Use
-
-- Inspect
-
-- Equip
-
-#### Interaction with people
-
-- Speak
-
-- Whisper
-
-- What can I say?
-
-#### Special
-
-- Play dead
-
-- Dance
-
+Documentation about how the assets are organized is in the README file in the
+base of the `assets/` folder.
