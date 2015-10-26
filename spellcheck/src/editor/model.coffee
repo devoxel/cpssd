@@ -31,9 +31,8 @@ edit_distance = (a, b) ->
       else
         x = min([last_col[i-1], last_col[i], current_col[i-1]])
         current_col.push(x + 1)
-    temp_col = current_col
     last_col = current_col
-    current_col = [temp_col[0]+1]
+    current_col = [current_col[0]+1]
   return last_col[a.length]
 
 
@@ -77,23 +76,26 @@ class EditorModel
     console.log("+ Initiating Model") if @config.debug
     @text = @config.welcome_text
     @container = @view.container # controller needs to set events up on this
-    @word_regex = /[a-zA-Z]+/ig
+    @word_regex = /[a-zA-Z]+'?[a-zA-Z]+/ig
 
   updateText: ->
     # Update the text
-    if @text != @view.textarea.val()
-      @text = @view.textarea.val()
+    if @view.textarea.val().match(@word_regex) == null
+      @text = []
+      @updateInfo()
+      @view.drawInfo()
+    else if @text != @view.textarea.val().match(@word_regex) #only update when changed
+      @text = @view.textarea.val().match(@word_regex)
       @updateInfo()
       @view.drawInfo()
 
   updateInfo: ->
-    # We don't need the values here, so don't bother storing them as attributes
-    # note: if the controller started needing these we would need to store them
-    # as attributes of the model (and then set the view ones are references)
-    words = @text.match(@word_regex)
-    if words.length >= 1
-      @view.word_count = countStr(words)
-      @view.misspelled = check_spelling(words, @config.word_list,
+    if @text.length < 1
+      @view.word_count = 0
+      @view.misspelled = {}
+    else
+      @view.word_count = countStr(@text)
+      @view.misspelled = check_spelling(@text, @config.word_list,
                                    @config.recommend_length, @view.misspelled)
 
   updateWindowSize: ->

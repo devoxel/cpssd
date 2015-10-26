@@ -15,7 +15,6 @@ class EditorController
   # (eg. settings)
   constructor: (@config, @model) ->
     console.log("+ Initiating EditorController") if @config.debug
-    @skipped_renders = 0
     @setupEvents()
 
   setupEvents: ->
