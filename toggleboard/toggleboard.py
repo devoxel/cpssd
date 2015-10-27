@@ -67,7 +67,7 @@ class Constants(object):
     InputTypes = [InputCoord, InputWASD]
     SelectedInput = InputCoord
     InputWASDPrompt = "w: up | a: left | s: down | d: right | e: flip\n"
-    InputCoordPrompt = "(row, column) to co-ord: "
+    InputCoordPrompt = "(x, y) to co-ord: "
     debug = False
     Congrats = """
  _       __     ____         __                     __   __
