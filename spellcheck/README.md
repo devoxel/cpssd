@@ -2,8 +2,6 @@
 
 A coffeescript text-editor, performs magic on your text.
 
-See it live at: [wand.dvxl.me](http://wand.dvxl.me)
-
 # Usage
 
 To use it just browse to the the url or alternatively
