@@ -1,8 +1,14 @@
 ###
-# Wand
-- Created by Aaron Delaney for a DCU Assignment
-~ For details refer to the README in the root of this project
+Author: Aaron Delaney
+Date:   29/10/2015
+
+Find more details in spellcheck/README.md
 ###
+
+# main.coffee
+# -------------------
+# Handles:
+# - instantiating the config, view, model and controller
 
 #= require Config
 #= require EditorView

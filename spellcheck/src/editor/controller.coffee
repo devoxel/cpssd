@@ -1,11 +1,14 @@
 ###
-# Wand
-- Created by Aaron Delaney for a DCU Assignment
-~ For details refer to the README in the root of this project
+Author: Aaron Delaney
+Date:   29/10/2015
+
+Find more details in spellcheck/README.md
 ###
 
 # editor/controller.coffee
-# - conatins the EditorController class
+# -------------------
+# Contains:
+# - the EditorController class
 
 class EditorController
   # -> in charge of managing how the model is updated.

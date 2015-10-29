@@ -1,12 +1,16 @@
 ###
-# Wand
-- Created by Aaron Delaney for a DCU Assignment
-~ For details refer to the README in the root of this project
+Author: Aaron Delaney
+Date:   29/10/2015
+
+Find more details in spellcheck/README.md
 ###
 
 # editor/model.coffee
-# - conatins the EditorModel class and the spell checking functions
-#   note: these functions may be moved eventually
+# -------------------
+# Contains:
+# - the EditorModel class
+# - spell checking functions
+
 min = (to_compare) ->
   smallest = to_compare[0]
   for elm in to_compare

@@ -1,15 +1,19 @@
 ###
-# Wand
-- Created by Aaron Delaney for a DCU Assignment
-~ For details refer to the README in the root of this project
+Author: Aaron Delaney
+Date:   29/10/2015
+
+Find more details in spellcheck/README.md
 ###
 
 # config.coffee
-# - contains the Config class
+# -------------------
+# Contains:
+# - the Config class
 
 class Config
   # The config class handles all of the constant-like data, as well as defaults
   # for things like edit message, and debug mode.
+  # It also handles the AJAX request for the wordlist
   constructor: ->
     @debug = true
     @welcome_text = "Welcome to wand"
