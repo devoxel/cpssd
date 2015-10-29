@@ -1,4 +1,4 @@
 
-class Render(object):
+class WorldView(object):
     pass
 
