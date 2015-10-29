@@ -5,14 +5,17 @@ File docs here, when they're ready!
 
 import controller
 
+class World(object):
+    def __init__(self, assets):
+        self.debug = assets.meta.debug
+        self.assets = assets
+
 class Game(object):
     def __init__(self, assets):
-        if assets.meta.debug == True:
-            self.debug = True
-            print '# Initializing game'
-
+        self.debug = assets.meta.debug
+        self.assets = assets
         self.prompt_controller = controller.Prompt()
         self.player = assets.entities.Player(self.prompt_controller)
 
     def run(self):
-        if self.debug: print '# Game running'
+        pass        
