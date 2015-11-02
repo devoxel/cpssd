@@ -8,7 +8,7 @@ It serves therefore as the entry point for the game itself.
 
 
 import assets
-from src.game import Game
+from engine.game import Game
 
 if __name__ == '__main__':
     closed_circuit = Game(assets)
