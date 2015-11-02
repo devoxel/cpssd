@@ -12,3 +12,6 @@ class Game(object):
         self.assets = assets
         self.prompt_controller = controller.Prompt()
         self.player = assets.entities.Player(self.prompt_controller)
+
+    def run(self):
+        pass

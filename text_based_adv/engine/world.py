@@ -6,5 +6,9 @@ File docs here, when they're ready!
 class World(object):
     def __init__(self, assets):
         self.debug = assets.meta.debug
-        self.assets = assets
-        self.current_area = assets.meta.places.starting_location
+        self.places = assets.places
+        self.entities = assets.entities
+        self._current_area = assets.places.starting_location(assets.places)
+
+    def get_description(self):
+        return self._current_area.long_desc
