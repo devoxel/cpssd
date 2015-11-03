@@ -1,80 +1,157 @@
 """
-# pathfinder.py
-    - Written by Aaron Delaney, 2015
-    - Built with https://www.python.org/
-    - Developed for CPSSD1 @ DCU
+pathfinder.py
+=============
+- Written by Aaron Delaney, 2015
+- Built with https://www.python.org/
+- Developed for CPSSD1 @ DCU
 
-## Command Line Interface
+Command Line Interface
+----------------------
 
-Usage: pathfinder.py [OPTIONS]
+Usage: pathfinder.py [OPTIONS] [table_files ...]
 
-Options:
+Prints out the amount of paths in a table from the 
+top left to the bottom right.
 
-  --help:
+If no table_files are provided, pathfinder.py will enter an interactive
+user mode.  
+
+Options
+-------
+
+--help
     Print this help file
 
-  --test:
+--test
     Initiates test protocol.
 
     This uses the in-build series of tests to ensure the program works as
     intended.
 
-  --verbose:
-    Enables verbose output
+--verbose:
+    Enables verbose output 
 
-CLI:
-  The command line interface is simple but powerful.
+    Table Files
+-----------
 
-      Table Input Format:
-      [ [1,1,0,0], [1,1,1,1], [1,1,1,1], [1,1,1,1] ]
+A table file is a file representing a table, or a series of tables. 
 
-  To use it normally just run the script.
+Here is an example of a table entered in one of these files:
 
-  However to use it effienctly you can just make a file with your tables and use bash (or your equivalent) to pass the arguments in, like so:
+```
+1111
+1101
+1111
+1111
+```
 
-    $ cat example_tables.txt | python pathfinder.py
+If you want to have multiple tables in the same file
+seperate the with a newline.
 
+It's important you get the size right here, unlike in
+the user interactive mode.
+
+Interactive Mode
+----------------
+
+The input is much the same as the file input.
+
+Enter a string of characters for each row in the table and to signify
+then end of table just enter a newline.
+
+However, to save time for people entering many lines, you can enter 
+something like this:
+
+```
+$ 11
+$ 1111
+```
+
+And pathfinder will assume you mean:
+
+```
+$ 1100
+$ 1111
+```
 """
 
 import sys
 
-from ast import literal_eval # Important to safely parse user inputted data
+def pathfinder_cli():
+    """CLI interprets the arguments and options passed to pathfinder.py """
+    
+    verbose = False
+    done_something = False
 
-def _cli():
-    """CLI handles all the user interaction over the command line."""
+    # The first argument is always the filename, so ignore it
+    for arg in sys.argv[1:]: 
+        if arg == '--verbose': 
+            verbose = True
+        elif arg == '--help':
+            # __doc__ refers to the docstring at the begining of the file
+            print(__doc__)
+            done_something = True        
+        elif arg == '--test':
+            test_pathfinder(verbose)
+            done_something = True
+        else:
+            read_from_file(verbose, arg)    
+    if not done_something: 
+        interactive_input(verbose)
 
-    if '--verbose' in sys.argv: loud = True
-    else: loud = False
 
-    if '--help' in sys.argv:
-        print(__doc__) # the beauty of docstrings in one line
-    elif '--test' in sys.argv:
-        _test(loud)
-    else:
-        _get_user_input(loud)
+def read_from_file(verbose, filename):
+    pass
 
-def _get_user_input(loud):
-    running = True
-    print 'CTRL-X or EOF to exit'
+def interactive_input(verbose):
 
-    prompt = "Enter your table like a pythonic data structure\n"
-    while running:
-        try:
-            user_input = raw_input(prompt)
-            table = literal_eval(user_input)
-            print _nice_table(table)
-            print 'Number of paths:', num_of_paths(table)
-        except KeyboardInterrupt:
-            sys.exit(0)
-        except EOFError:
-            sys.exit(0)
-        except:
-            print '\nInvalid string', user_input
-            if loud:
-                print sys.exc_info()
-            print
+    prompt = "\nEnter you table by simple writing a 0 for an unpassable tile\n" +\
+             "or a 1 for an unpassable tile, as a string of integers\n" +\
+             "To run the path finder on your table, enter a blank line\n" +\
+             "\nNote that all invalid input will be taken as a blank line." +\
+             "\nCTRL-X to exit\n" +\
+             "\nBlank line for to run pathfinder\n"
 
-def num_of_paths(table, num_rows=None, num_cols=None):
+    while True:
+        table_entered = False
+        table = []
+        max_columns = 0
+        print prompt
+        while not table_entered:
+            try:
+                row = []
+                user_input = raw_input()
+
+                for c in user_input:
+                    row.append(int(c))
+
+                columns = max(len(row), max_columns)                
+
+                if len(row) == 0:
+                    table_entered = True
+                else:
+                    table.append(row)
+            except KeyboardInterrupt:
+                sys.exit(0)
+            except EOFError:
+                sys.exit(0)
+            except:
+                print '\nInvalid string', user_input
+                if verbose:
+                    print sys.exc_info()
+                table_entered = True
+
+        for row in table:
+            if len(row) < max_columns:
+                print 'nice maymay'
+                for i in range(0, max_columns-len(row)):
+                    row.append(0)
+        
+        print table
+        if verbose: print _formatted_table(table)       
+        print 'Number of paths:', num_of_paths(verbose, table)
+
+def num_of_paths(table, verbose, num_rows=None, num_cols=None):
     """num_of_paths -> returns int
 
     Finds the total possible of ways to traverse a table from the top left
@@ -119,16 +196,22 @@ def num_of_paths(table, num_rows=None, num_cols=None):
                     value_table[cur_y][cur_x] = new_value
         return value_table[num_cols-1][num_rows-1]
     except IndexError:
+        if verbose: 
+            print 'Invalid indexed table, ie: unbalanced rows'
+            print sys.exc_info()
         return -1
     except TypeError:
+        if verbose: 
+            print 'Passed in the wrong type of table'
+            print sys.exc_info()
         return -1
 
-def _test(loud):
-    """_test(loud): run unit tests on pathfinder
+def test_pathfinder(verbose):
+    """_test(verbose): run unit tests on pathfinder
 
-    If loud is true lots of stuff is printed.
+    If verbose is true lots of stuff is printed
     """
-    if loud:
+    if verbose:
         print '\n', '~-'*15, '\n', '# Testing pathfinder.py', '\n','-~'*15
 
     test_data = {
@@ -150,7 +233,7 @@ def _test(loud):
         list_to_test    = test_data[key][0]
         expected_value  = test_data[key][1]
         value           = num_of_paths(list_to_test)
-        if loud:
+        if verbose:
             print '\t',list_to_test, ' should be ', expected_value
             print '\t','num_of_paths returned', value, '\n'
         assert expected_value == value
@@ -158,7 +241,7 @@ def _test(loud):
     print '++ Tests passed'
     return 0
 
-def _nice_table(t):
+def _formatted_table(t):
     out = '[\n'
     for v in t:
         out += '    ' + str(v) + '\n'
@@ -166,7 +249,7 @@ def _nice_table(t):
 
 if __name__ == '__main__':
     try:
-        _cli()
+        pathfinder_cli()
     except SystemExit:
         print ''
         sys.exit(0)
