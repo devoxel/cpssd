@@ -8,16 +8,19 @@ pathfinder.py
 Command Line Interface
 ----------------------
 
-Usage: pathfinder.py [OPTIONS] [table_files ...]
+Usage: python pathfinder.py [OPTIONS] [TABLE FILE PATHS ...]
 
-Prints out the amount of paths in a table from the 
+Prints out the amount of paths in a table from the
 top left to the bottom right.
 
 If no table_files are provided, pathfinder.py will enter an interactive
-user mode.  
+user mode.
 
 Options
 -------
+
+--verbose:
+    Enables verbose output
 
 --help
     Print this help file
@@ -28,13 +31,12 @@ Options
     This uses the in-build series of tests to ensure the program works as
     intended.
 
---verbose:
-    Enables verbose output 
-
-    Table Files
+Table Files
 -----------
 
-A table file is a file representing a table, or a series of tables. 
+A table file is a file representing a table, or a series of tables.
+
+You should pass in the file path, relative to where you run pathfinder.
 
 Here is an example of a table entered in one of these files:
 
@@ -51,6 +53,19 @@ seperate the with a newline.
 It's important you get the size right here, unlike in
 the user interactive mode.
 
+Examples
+-------
+
+    # Testing
+    $ python pathfinder.py --verbose --test
+
+    # Using example files
+    $ python pathfinder.py --verbose example_tables.txt
+
+    # Interactive mode
+    $ python pathfinder.py --verbose
+
+
 Interactive Mode
 ----------------
 
@@ -59,7 +74,7 @@ The input is much the same as the file input.
 Enter a string of characters for each row in the table and to signify
 then end of table just enter a newline.
 
-However, to save time for people entering many lines, you can enter 
+However, to save time for people entering many lines, you can enter
 something like this:
 
 ```
@@ -70,7 +85,7 @@ $ 1111
 And pathfinder will assume you mean:
 
 ```
-$ 1100
+$ 1100 # <-- zeros were padded as an assumption
 $ 1111
 ```
 """
@@ -78,25 +93,25 @@ $ 1111
 import sys
 
 def pathfinder_cli():
-    """CLI interprets the arguments and options passed to pathfinder.py """
-    
+    """CLI interprets the arguments and options passed to pathfinder.py"""
+
     verbose = False
     done_something = False
 
     # The first argument is always the filename, so ignore it
-    for arg in sys.argv[1:]: 
-        if arg == '--verbose': 
+    for arg in sys.argv[1:]:
+        if arg == '--verbose':
             verbose = True
         elif arg == '--help':
             # __doc__ refers to the docstring at the begining of the file
             print(__doc__)
-            done_something = True        
+            done_something = True
         elif arg == '--test':
             test_pathfinder(verbose)
             done_something = True
         else:
-            read_from_file(verbose, arg)    
-    if not done_something: 
+            read_from_file(verbose, arg)
+    if not done_something:
         interactive_input(verbose)
 
 
@@ -105,12 +120,13 @@ def read_from_file(verbose, filename):
 
 def interactive_input(verbose):
 
-    prompt = "\nEnter you table by simple writing a 0 for an unpassable tile\n" +\
-             "or a 1 for an unpassable tile, as a string of integers\n" +\
-             "To run the path finder on your table, enter a blank line\n" +\
-             "\nNote that all invalid input will be taken as a blank line." +\
-             "\nCTRL-X to exit\n" +\
-             "\nBlank line for to run pathfinder\n"
+    # this syntax is a special multiline string
+    prompt = ("\nEnter you table by simple writing a 0 for an unpassable tile\n"
+              "or a 1 for an unpassable tile, as a string of integers\n\n"
+              "CTRL-X to exit\n"
+              "Blank line runs pathfinder on entered table\n"
+              "Any unexpected value is interpreted as a newline\n"
+             )
 
     while True:
         table_entered = False
@@ -125,15 +141,16 @@ def interactive_input(verbose):
                 for c in user_input:
                     row.append(int(c))
 
-                columns = max(len(row), max_columns)                
+                max_columns = max(len(row), max_columns)
 
                 if len(row) == 0:
                     table_entered = True
                 else:
                     table.append(row)
+
             except KeyboardInterrupt:
                 sys.exit(0)
-            except EOFError:
+            except EOFError: # this handles people piping in input
                 sys.exit(0)
             except:
                 print '\nInvalid string', user_input
@@ -143,13 +160,13 @@ def interactive_input(verbose):
 
         for row in table:
             if len(row) < max_columns:
-                print 'nice maymay'
                 for i in range(0, max_columns-len(row)):
+                    # lists are mutable types so this will change table too
                     row.append(0)
-        
-        print table
-        if verbose: print _formatted_table(table)       
-        print 'Number of paths:', num_of_paths(verbose, table)
+
+        no_of_paths = num_of_paths(table, verbose)
+        if verbose: print _formatted_table(table)
+        print 'Number of paths:', no_of_paths
 
 def num_of_paths(table, verbose, num_rows=None, num_cols=None):
     """num_of_paths -> returns int
@@ -196,13 +213,13 @@ def num_of_paths(table, verbose, num_rows=None, num_cols=None):
                     value_table[cur_y][cur_x] = new_value
         return value_table[num_cols-1][num_rows-1]
     except IndexError:
-        if verbose: 
-            print 'Invalid indexed table, ie: unbalanced rows'
+        if verbose:
+            print '\nInvalid indexed table, ie: unbalanced rows'
             print sys.exc_info()
         return -1
     except TypeError:
-        if verbose: 
-            print 'Passed in the wrong type of table'
+        if verbose:
+            print '\nPassed in the wrong type of table'
             print sys.exc_info()
         return -1
 
@@ -253,7 +270,3 @@ if __name__ == '__main__':
     except SystemExit:
         print ''
         sys.exit(0)
-    except:
-        print '\nSomething went wrong.. '
-        print sys.exc_info()
-        print 'Try running with --verbose'
