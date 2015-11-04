@@ -13,7 +13,6 @@
   },
   "scripts": {
     "build": "coffeescript-concat -R src/ -o dist/dist.coffee | coffee -c dist/dist.coffee",
-    "build:watch": "watch 'npm run build'",
     "server": "echo \"press ctrl+c to exit\" & nano-server 8123 ./dist/"
   }
 }
