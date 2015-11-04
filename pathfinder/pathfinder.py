@@ -28,7 +28,7 @@ Options
 --test
     Initiates test protocol.
 
-    This uses the in-build series of tests to ensure the program works as
+    This uses the in-build series of tests to ensure the num_of_paths works as
     intended.
 
 Table Files
@@ -91,72 +91,113 @@ $ 1111
 """
 
 import sys
+import traceback
+
+def _formatted_table(t):
+    """Little helper function to print a nicly formatted table"""
+    # if t looks like [[12,19,3,4],[2,6,100,1]]
+    # output should be:
+    #     12 19 3   4
+    #     2  6  100 1
+    try:
+        digit_padding = 0
+        for row in t:
+            for v in row:
+                digit_padding = max(len(str(v)), digit_padding)
+        out = ""
+        for row in t:
+            out += '|'
+            for v in row:
+                s = str(v)
+                padding = (digit_padding - len(s))
+                out += s + ' '*padding + '|'
+            out += '\n'
+    except:
+        out = str(t)
+    return out
 
 def pathfinder_cli():
     """CLI interprets the arguments and options passed to pathfinder.py"""
 
+    # In order to allow verbose to be the last input the evaluations
+    # must be carried out after reading all the arguments.
     verbose = False
-    done_something = False
+    read_from_file = [] # list of files to print
+    print_help = False
+    do_tests = False
 
     # The first argument is always the filename, so ignore it
     for arg in sys.argv[1:]:
         if arg == '--verbose':
             verbose = True
         elif arg == '--help':
-            # __doc__ refers to the docstring at the begining of the file
-            print(__doc__)
-            done_something = True
+            print_help = True
         elif arg == '--test':
-            test_pathfinder(verbose)
-            done_something = True
+            do_tests = True
         else:
-            read_from_file(verbose, arg)
-    if not done_something:
-        interactive_input(verbose)
+            read_from_file.append(arg)
 
+    if print_help:
+        # __doc__ refers to the docstring at the begining of the file
+        print(__doc__)
+    elif do_tests:
+        test_num_of_paths(verbose)
+    elif len(read_from_file) > 0:
+        for path in read_from_file:
+            read_from_file(verbose, path)
+    else:
+        try:
+            interactive_input(verbose)
+        except KeyboardInterrupt:
+            print ' Bye Bye!'
+            sys.exit(0)
+        except EOFError: # this makes sure people can pipe in data
+            sys.exit(0)
+        except SystemExit:
+            sys.exit(0)
 
 def read_from_file(verbose, filename):
-    pass
+    print filename
 
 def interactive_input(verbose):
-
+    """Take user input from strings"""
     # this syntax is a special multiline string
     prompt = ("\nEnter you table by simple writing a 0 for an unpassable tile\n"
               "or a 1 for an unpassable tile, as a string of integers\n\n"
-              "CTRL-X to exit\n"
+              "Press CTRL+C or type s to exit\n"
               "Blank line runs pathfinder on entered table\n"
               "Any unexpected value is interpreted as a newline\n"
              )
+    string_seperator = "_________________________________"
 
     while True:
         table_entered = False
         table = []
         max_columns = 0
+        print string_seperator
         print prompt
         while not table_entered:
-            try:
-                row = []
-                user_input = raw_input()
 
+            row = []
+            user_input = raw_input()
+
+            if user_input[0:1].lower() == 's':
+                sys.exit(0)
+
+            try:
                 for c in user_input:
                     row.append(int(c))
+            except ValueError:
+                print 'Invalid character in row'
+                if verbose: print traceback.format_exc()
+                continue # don't evaluate the rest of this while loop
 
-                max_columns = max(len(row), max_columns)
+            max_columns = max(len(row), max_columns)
 
-                if len(row) == 0:
-                    table_entered = True
-                else:
-                    table.append(row)
-
-            except KeyboardInterrupt:
-                sys.exit(0)
-            except EOFError: # this handles people piping in input
-                sys.exit(0)
-            except:
-                print '\nInvalid string', user_input
-                if verbose:
-                    print sys.exc_info()
+            if len(row) == 0:
                 table_entered = True
+            else:
+                table.append(row)
 
         for row in table:
             if len(row) < max_columns:
@@ -167,6 +208,10 @@ def interactive_input(verbose):
         no_of_paths = num_of_paths(table, verbose)
         if verbose: print _formatted_table(table)
         print 'Number of paths:', no_of_paths
+        print string_seperator
+        user_input = raw_input('\nEnter "s" to stop, otherwise continue: ')
+        if user_input[0:1].lower() == 's':
+            sys.exit(0)
 
 def num_of_paths(table, verbose, num_rows=None, num_cols=None):
     """num_of_paths -> returns int
@@ -190,46 +235,54 @@ def num_of_paths(table, verbose, num_rows=None, num_cols=None):
     """
     try:
         num_paths = 0
-        if num_rows == None: num_rows = len(table[0])
-        if num_cols == None: num_cols = len(table)
-        value_table = [[ 0 for i in range(0, num_rows) ] for i in range(0, num_cols)]
-        for cur_x in range(0, num_rows):
-            if len(table[cur_x]) != num_rows:
-                raise IndexError
-            for cur_y in range(0, num_cols):
-                left = cur_x - 1
-                up   = cur_y - 1
+        if num_rows == None: num_rows = len(table)
+        if num_cols == None: num_cols = len(table[0])
+        value_table = [[ 0 for j in range(0, num_cols) ] for i in range(0, num_rows)]
+        for cur_y in range(0, num_rows):
+            if len(table[cur_y]) != num_cols:
+                raise IndexError # we explicitly wants correct tables
+            for cur_x in range(0, num_cols):
                 value = table[cur_y][cur_x]
-                if type(value) is not int:
-                    raise IndexError
-                if value == 1:
-                    new_value = 0
-                    if left >= 0 and value_table[cur_y][left] is not 0:
-                        new_value += value_table[cur_y][left]
-                    if up >= 0 and value_table[up][cur_x] is not 0:
-                        new_value += value_table[up][cur_x]
-                    if cur_y == 0 and cur_x == 0:
-                        new_value = 1
+                if value != 0 and value != 1:
+                    raise TypeError
+                if value == 1:  # tile is visitable
+                    left = cur_x - 1
+                    up   = cur_y - 1
+                    if cur_x == 0 and cur_y == 0:
+                        prev_left_value = 1
+                        prev_up_value = 0
+                    elif cur_x == 0:
+                        prev_left_value = 0
+                        prev_up_value = value_table[up][cur_x]
+                    elif cur_y == 0:
+                        prev_up_value = 0
+                        prev_left_value = value_table[cur_y][left]
+                    else:
+                        prev_up_value = value_table[up][cur_x]
+                        prev_left_value = value_table[cur_y][left]
+                    new_value = prev_left_value + prev_up_value
                     value_table[cur_y][cur_x] = new_value
-        return value_table[num_cols-1][num_rows-1]
+        if verbose:
+            print _formatted_table(value_table)
+        return value_table[num_rows-1][num_cols-1]
     except IndexError:
         if verbose:
-            print '\nInvalid indexed table, ie: unbalanced rows'
-            print sys.exc_info()
+            print '\nInvalid table, eg: unbalanced rows'
+            print traceback.format_exc()
         return -1
     except TypeError:
         if verbose:
-            print '\nPassed in the wrong type of table'
-            print sys.exc_info()
+            print traceback.format_exc()
+            print '\nPassed in the wrong data'
         return -1
 
-def test_pathfinder(verbose):
-    """_test(verbose): run unit tests on pathfinder
+def test_num_of_paths(verbose):
+    """_test(verbose): run unit tests on num_of_paths
 
     If verbose is true lots of stuff is printed
     """
     if verbose:
-        print '\n', '~-'*15, '\n', '# Testing pathfinder.py', '\n','-~'*15
+        print '\n# Testing pathfinder.py'
 
     test_data = {
         'empty_list' : ([], -1),
@@ -249,24 +302,23 @@ def test_pathfinder(verbose):
     for key in test_data:
         list_to_test    = test_data[key][0]
         expected_value  = test_data[key][1]
-        value           = num_of_paths(list_to_test)
+        # verbose is false because we don't need to see things
+        # multiple tinmes
+        value           = num_of_paths(list_to_test, verbose=False)
         if verbose:
-            print '\t',list_to_test, ' should be ', expected_value
-            print '\t','num_of_paths returned', value, '\n'
-        assert expected_value == value
+            print '-', 'testing:\n', _formatted_table(list_to_test)
+            print '-', 'should return ', expected_value
+            print '-', 'returned', value, '\n'
+        try:
+            assert expected_value == value
+        except AssertionError:
+            if verbose: print traceback.format_exc()
+            print '++ Test failed. Run with --verbose'
+            sys.exit(1)
 
     print '++ Tests passed'
     return 0
 
-def _formatted_table(t):
-    out = '[\n'
-    for v in t:
-        out += '    ' + str(v) + '\n'
-    return out + ']'
 
 if __name__ == '__main__':
-    try:
-        pathfinder_cli()
-    except SystemExit:
-        print ''
-        sys.exit(0)
+    pathfinder_cli()
