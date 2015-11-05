@@ -12,7 +12,7 @@
     "nano-server": "latest"
   },
   "scripts": {
-    "build": "coffeescript-concat -R src/ -o dist/dist.coffee | coffee -c dist/dist.coffee",
+    "build": "coffeescript-concat -R src/ -o dist/dist.coffee & cd dist; coffee -cm dist.coffee",
     "server": "echo \"press ctrl+c to exit\" & nano-server 8123 ./dist/"
   }
 }
