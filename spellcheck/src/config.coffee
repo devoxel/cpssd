@@ -19,7 +19,7 @@ class Config
     @welcome_text = "Welcome to wand"
     @welcome_text_length = 3
     @word_list = []
-    @wordlist_url = "https://gist.githubusercontent.com/devoxel/223fcb59b3072884dd0f/raw/552cace09728fae9cbf75df1f314bb893db2289d/10000wordlist.txt"
+    @wordlist_url = "http://www.mieliestronk.com/corncob_lowercase.txt"
     @wordlist_request = $.ajax(@wordlist_url,
       cache: true,
       crossDomain: true,
