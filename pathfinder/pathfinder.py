@@ -144,7 +144,7 @@ def pathfinder_cli():
         test_num_of_paths(verbose)
     elif len(read_from_file) > 0:
         for path in read_from_file:
-            read_from_file(verbose, path)
+            parse_file(path, verbose)
     else:
         try:
             interactive_input(verbose)
@@ -156,14 +156,43 @@ def pathfinder_cli():
         except SystemExit:
             sys.exit(0)
 
-def read_from_file(verbose, filename):
-    print filename
+def parse_binary_string(s):
+    """Removes non binary characters from a string"""
+    binary_list = []
+    for c in s:
+        if c in '01':
+            binary_list.append(int(c))
+    return binary_list
+
+def handle_table_input(string, verbose):
+    table = []
+    output = []
+    for row in string.split('\n'): 
+        current_row = parse_binary_string(row)
+        print current_row
+        if len(current_row) > 0:
+            table.append(current_row)
+        else:
+            path_output = '\nNumber of paths: ' + str(num_of_paths(table, verbose))
+            if verbose:
+                output.append( _formatted_table(table) + path_output )
+            else:
+                output.append(path_output)
+    return output
+
+def parse_file(filepath, verbose):
+    file_string = ''
+    with open(filepath) as f:
+        file_string = f.read()    
+    for output in handle_table_input(file_string, verbose):
+        print output 
 
 def interactive_input(verbose):
     """Take user input from strings"""
     # this syntax is a special multiline string
-    prompt = ("\nEnter you table by simple writing a 0 for an unpassable tile\n"
+    prompt = ("\nEnter your table by simple writing a 0 for an unpassable tile\n"
               "or a 1 for an unpassable tile, as a string of integers\n\n"
+              "For example:\n11100111\n\n"
               "Press CTRL+C or type s to exit\n"
               "Blank line runs pathfinder on entered table\n"
               "Any unexpected value is interpreted as a newline\n"
@@ -185,6 +214,7 @@ def interactive_input(verbose):
                 sys.exit(0)
 
             try:
+                user_input = parse_binary_string(user_input)
                 for c in user_input:
                     row.append(int(c))
             except ValueError:
@@ -205,9 +235,7 @@ def interactive_input(verbose):
                     # lists are mutable types so this will change table too
                     row.append(0)
 
-        no_of_paths = num_of_paths(table, verbose)
-        if verbose: print _formatted_table(table)
-        print 'Number of paths:', no_of_paths
+        print handle_table_input(table, verbose)[0]
         print string_seperator
         user_input = raw_input('\nEnter "s" to stop, otherwise continue: ')
         if user_input[0:1].lower() == 's':
