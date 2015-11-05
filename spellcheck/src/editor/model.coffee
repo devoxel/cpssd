@@ -52,9 +52,11 @@ edit_distance_reccomendations = (word, total_reccomends, word_list) ->
       if best_score == -1 and current_word not in best_words
         best_word = current_word
         best_score = score
-      if score < best_score and current_word not in best_words
+      if score <= best_score and current_word not in best_words
         best_word = current_word
         best_score = score
+      if score == 1
+        break
       i = i + 1
     best_words.push(best_word)
 

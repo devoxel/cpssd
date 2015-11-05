@@ -19,7 +19,7 @@ class Config
     @welcome_text = "Welcome to wand"
     @welcome_text_length = 3
     @word_list = []
-    @wordlist_url = "http://www.mieliestronk.com/corncob_lowercase.txt"
+    @wordlist_url = "https://raw.githubusercontent.com/devoxel/octo_wordlist/master/medium.txt"
     @wordlist_request = $.ajax(@wordlist_url,
       cache: true,
       crossDomain: true,
@@ -27,4 +27,8 @@ class Config
     ).done (data, textStatus, jqXHR) =>
       console.log("Finished downloading wordlist") if @debug
       @word_list = data.split(/\n/)
+
+    # ASSIGNMENT RELATED VARIABLES
+    @spellcheck_types = ['min_edit', 'kernighan']
+    @current_type = @spellcheck_types[0]
     @recommend_length = 4 # the amount of reccomended words provided
