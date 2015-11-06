@@ -284,8 +284,13 @@ def get_output(table, verbose):
 
 def parse_file(filepath, verbose):
     file_string = ''
-    with open(filepath) as f:
-        file_string = f.read()
+    try:
+        with open(filepath) as f:
+            file_string = f.read()
+    except:
+        print 'File does not exist'
+        if verbose: print traceback.format_exc()
+        return
     tables = parse_input(file_string.split('\n'))
     for table in tables:
         print get_output(table, verbose)
