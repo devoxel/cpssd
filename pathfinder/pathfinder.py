@@ -1,35 +1,39 @@
 """
-pathfinder.py
-=============
 - Written by Aaron Delaney, 2015
 - Built with https://www.python.org/
 - Developed for CPSSD1 @ DCU
+- Last Worked on the file: 06/11/2015
 
 Command Line Interface
 ----------------------
 
-Usage: python pathfinder.py [OPTIONS] [TABLE FILE PATHS ...]
+Usage:
+
+    python pathfinder.py [OPTIONS] [TABLE FILE PATHS ...]
 
 Prints out the amount of paths in a table from the
 top left to the bottom right.
 
-If no table_files are provided, pathfinder.py will enter an interactive
+If no `table_files` are provided, pathfinder.py will enter an interactive
 user mode.
 
 Options
 -------
 
---verbose:
-    Enables verbose output
+`--verbose`
 
---help
-    Print this help file
+Enables verbose output
 
---test
-    Initiates test protocol.
+`--help`
 
-    This uses the in-build series of tests to ensure the num_of_paths works as
-    intended.
+Print this help file
+
+`--test`
+
+Initiates test protocol.
+
+This uses the in-build series of tests to ensure the num_of_paths works as
+intended.
 
 Table Files
 -----------
@@ -54,7 +58,7 @@ It's important you get the size right here, unlike in
 the user interactive mode.
 
 Examples
--------
+--------
 
     # Testing
     $ python pathfinder.py --verbose --test
@@ -98,12 +102,11 @@ import traceback
 
 
 def num_of_paths(table, verbose=False):
-    """num_of_paths:
-    -> if !verbose: returns int which reflects amounts of paths
-    -> if  verbose: returns a tuple: (amount_of_paths, working table)
-
-    Finds the total possible of ways to traverse a table from the top left
+    """Finds the total possible of ways to traverse a table from the top left
     to the bottom right.
+
+    - if !verbose: returns int which reflects amounts of paths
+    - if  verbose: returns a tuple: (amount_of_paths, working table)
 
     The table can consist of 1s and 0s.
 
@@ -115,8 +118,6 @@ def num_of_paths(table, verbose=False):
 
     The table should be accessed by table[y][x]
     """
-    # To get a better idea of how this algorithm functions, run the program
-    # with --verbose. It shows the working table.
     try:
         num_paths = 0
         num_rows = len(table)
@@ -165,7 +166,8 @@ def _formatted_table(t):
     """A helper function to print a nice looking table.
 
     If t looks like [[12,19,3,4],[2,6,100,1]]
-    -> output should be:
+
+    Output should be
         |012|019|003|004
         |002|006|100|001
 
@@ -194,7 +196,7 @@ def _formatted_table(t):
     return out
 
 def pathfinder_cli():
-    """CLI interprets the arguments and options passed to pathfinder.py"""
+    """Interprets the arguments and options passed to pathfinder"""
     # In order to allow verbose to be the last input the evaluations
     # must be carried out after reading all the arguments.
     verbose = False
@@ -241,12 +243,14 @@ def parse_binary_string(s):
     return binary_list
 
 def pad_table(table, columns):
+    """Pad a table with 0's"""
     for row in table:
         if len(row) < columns:
             for i in range(len(row), columns):
                 row.append(0) # tables are mutable, so no need to return
 
 def parse_input(user_input):
+    """Parse input, where `user_input` is a list of rows of user input"""
     tables = []
     current_table = []
     max_column = 0 # try to fix user input#
@@ -270,6 +274,7 @@ def parse_input(user_input):
         return current_table
 
 def get_output(table, verbose):
+    """Handles creation of the output that users see"""
     number_of_paths = num_of_paths(table, verbose)
     path_info = '\nNumber of paths: '
     if verbose:
@@ -283,6 +288,7 @@ def get_output(table, verbose):
         return path_info + str(number_of_paths)
 
 def parse_file(filepath, verbose):
+    """Given a filepath, try to load the file"""
     file_string = ''
     try:
         with open(filepath) as f:
@@ -331,7 +337,7 @@ def interactive_input(verbose):
             sys.exit(0)
 
 def test_num_of_paths(verbose):
-    """test_num_of_paths(verbose): run unit tests on num_of_paths
+    """Run unit tests on num_of_paths
 
     If verbose is true, LOTS of stuff is printed about the tests
     """

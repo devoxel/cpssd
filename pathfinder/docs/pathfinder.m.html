@@ -4,11 +4,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
     <title>pathfinder API documentation</title>
-    <meta name="description" content="pathfinder.py
-=============
-- Written by Aaron Delaney, 2015
+    <meta name="description" content="- Written by Aaron Delaney, 2015
 - Built with https://www.python.org/
-- ..." />
+- Developed for CPSSD1 @ DCU
+-..." />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -1003,28 +1002,29 @@ table {
 
   <header id="section-intro">
   <h1 class="title"><span class="name">pathfinder</span> module</h1>
-  <h1>pathfinder.py</h1>
-<ul>
+  <ul>
 <li>Written by Aaron Delaney, 2015</li>
 <li>Built with https://www.python.org/</li>
 <li>Developed for CPSSD1 @ DCU</li>
+<li>Last Worked on the file: 06/11/2015</li>
 </ul>
 <h2>Command Line Interface</h2>
-<p>Usage: python pathfinder.py [OPTIONS] [TABLE FILE PATHS ...]</p>
+<p>Usage:</p>
+<pre><code>python pathfinder.py [OPTIONS] [TABLE FILE PATHS ...]
+</code></pre>
 <p>Prints out the amount of paths in a table from the
 top left to the bottom right.</p>
-<p>If no table_files are provided, pathfinder.py will enter an interactive
+<p>If no <code>table_files</code> are provided, pathfinder.py will enter an interactive
 user mode.</p>
 <h2>Options</h2>
-<p>--verbose:
-    Enables verbose output</p>
-<p>--help
-    Print this help file</p>
-<p>--test
-    Initiates test protocol.</p>
-<pre><code>This uses the in-build series of tests to ensure the num_of_paths works as
-intended.
-</code></pre>
+<p><code>--verbose</code></p>
+<p>Enables verbose output</p>
+<p><code>--help</code></p>
+<p>Print this help file</p>
+<p><code>--test</code></p>
+<p>Initiates test protocol.</p>
+<p>This uses the in-build series of tests to ensure the num_of_paths works as
+intended.</p>
 <h2>Table Files</h2>
 <p>A table file is a file representing a table, or a series of tables.</p>
 <p>You should pass in the file path, relative to where you run pathfinder.</p>
@@ -1063,37 +1063,41 @@ then end of table just enter a newline.</p>
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pathfinder', this);">Show source &equiv;</a></p>
   <div id="source-pathfinder" class="source">
     <pre><code>"""
-pathfinder.py
-=============
 - Written by Aaron Delaney, 2015
 - Built with https://www.python.org/
 - Developed for CPSSD1 @ DCU
+- Last Worked on the file: 06/11/2015
 
 Command Line Interface
 ----------------------
 
-Usage: python pathfinder.py [OPTIONS] [TABLE FILE PATHS ...]
+Usage:
+
+    python pathfinder.py [OPTIONS] [TABLE FILE PATHS ...]
 
 Prints out the amount of paths in a table from the
 top left to the bottom right.
 
-If no table_files are provided, pathfinder.py will enter an interactive
+If no `table_files` are provided, pathfinder.py will enter an interactive
 user mode.
 
 Options
 -------
 
---verbose:
-    Enables verbose output
+`--verbose`
 
---help
-    Print this help file
+Enables verbose output
 
---test
-    Initiates test protocol.
+`--help`
 
-    This uses the in-build series of tests to ensure the num_of_paths works as
-    intended.
+Print this help file
+
+`--test`
+
+Initiates test protocol.
+
+This uses the in-build series of tests to ensure the num_of_paths works as
+intended.
 
 Table Files
 -----------
@@ -1118,7 +1122,7 @@ It's important you get the size right here, unlike in
 the user interactive mode.
 
 Examples
--------
+--------
 
     # Testing
     $ python pathfinder.py --verbose --test
@@ -1162,12 +1166,11 @@ import traceback
 
 
 def num_of_paths(table, verbose=False):
-    """num_of_paths:
-    -> if !verbose: returns int which reflects amounts of paths
-    -> if  verbose: returns a tuple: (amount_of_paths, working table)
-
-    Finds the total possible of ways to traverse a table from the top left
+    """Finds the total possible of ways to traverse a table from the top left
     to the bottom right.
+
+    - if !verbose: returns int which reflects amounts of paths
+    - if  verbose: returns a tuple: (amount_of_paths, working table)
 
     The table can consist of 1s and 0s.
 
@@ -1179,8 +1182,6 @@ def num_of_paths(table, verbose=False):
 
     The table should be accessed by table[y][x]
     """
-    # To get a better idea of how this algorithm functions, run the program
-    # with --verbose. It shows the working table.
     try:
         num_paths = 0
         num_rows = len(table)
@@ -1229,7 +1230,8 @@ def _formatted_table(t):
     """A helper function to print a nice looking table.
 
     If t looks like [[12,19,3,4],[2,6,100,1]]
-    -> output should be:
+
+    Output should be
         |012|019|003|004
         |002|006|100|001
 
@@ -1258,7 +1260,7 @@ def _formatted_table(t):
     return out
 
 def pathfinder_cli():
-    """CLI interprets the arguments and options passed to pathfinder.py"""
+    """Interprets the arguments and options passed to pathfinder"""
     # In order to allow verbose to be the last input the evaluations
     # must be carried out after reading all the arguments.
     verbose = False
@@ -1305,12 +1307,14 @@ def parse_binary_string(s):
     return binary_list
 
 def pad_table(table, columns):
+    """Pad a table with 0's"""
     for row in table:
         if len(row) < columns:
             for i in range(len(row), columns):
                 row.append(0) # tables are mutable, so no need to return
 
 def parse_input(user_input):
+    """Parse input, where `user_input` is a list of rows of user input"""
     tables = []
     current_table = []
     max_column = 0 # try to fix user input#
@@ -1334,6 +1338,7 @@ def parse_input(user_input):
         return current_table
 
 def get_output(table, verbose):
+    """Handles creation of the output that users see"""
     number_of_paths = num_of_paths(table, verbose)
     path_info = '\nNumber of paths: '
     if verbose:
@@ -1347,6 +1352,7 @@ def get_output(table, verbose):
         return path_info + str(number_of_paths)
 
 def parse_file(filepath, verbose):
+    """Given a filepath, try to load the file"""
     file_string = ''
     try:
         with open(filepath) as f:
@@ -1395,7 +1401,7 @@ def interactive_input(verbose):
             sys.exit(0)
 
 def test_num_of_paths(verbose):
-    """test_num_of_paths(verbose): run unit tests on num_of_paths
+    """Run unit tests on num_of_paths
 
     If verbose is true, LOTS of stuff is printed about the tests
     """
@@ -1457,10 +1463,12 @@ if __name__ == '__main__':
 
     
   
+    <div class="desc"><p>Handles creation of the output that users see</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pathfinder.get_output', this);">Show source &equiv;</a></p>
   <div id="source-pathfinder.get_output" class="source">
     <pre><code>def get_output(table, verbose):
+    """Handles creation of the output that users see"""
     number_of_paths = num_of_paths(table, verbose)
     path_info = '\nNumber of paths: '
     if verbose:
@@ -1540,11 +1548,12 @@ if __name__ == '__main__':
 
     
   
-    <div class="desc"><p>num_of_paths:
--&gt; if !verbose: returns int which reflects amounts of paths
--&gt; if  verbose: returns a tuple: (amount_of_paths, working table)</p>
-<p>Finds the total possible of ways to traverse a table from the top left
+    <div class="desc"><p>Finds the total possible of ways to traverse a table from the top left
 to the bottom right.</p>
+<ul>
+<li>if !verbose: returns int which reflects amounts of paths</li>
+<li>if  verbose: returns a tuple: (amount_of_paths, working table)</li>
+</ul>
 <p>The table can consist of 1s and 0s.</p>
 <p>1s represent a movable location.
 0s represent a location that is blocked off.</p>
@@ -1555,12 +1564,11 @@ to the bottom right.</p>
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pathfinder.num_of_paths', this);">Show source &equiv;</a></p>
   <div id="source-pathfinder.num_of_paths" class="source">
     <pre><code>def num_of_paths(table, verbose=False):
-    """num_of_paths:
-    -> if !verbose: returns int which reflects amounts of paths
-    -> if  verbose: returns a tuple: (amount_of_paths, working table)
-
-    Finds the total possible of ways to traverse a table from the top left
+    """Finds the total possible of ways to traverse a table from the top left
     to the bottom right.
+
+    - if !verbose: returns int which reflects amounts of paths
+    - if  verbose: returns a tuple: (amount_of_paths, working table)
 
     The table can consist of 1s and 0s.
 
@@ -1572,8 +1580,6 @@ to the bottom right.</p>
 
     The table should be accessed by table[y][x]
     """
-    # To get a better idea of how this algorithm functions, run the program
-    # with --verbose. It shows the working table.
     try:
         num_paths = 0
         num_rows = len(table)
@@ -1632,10 +1638,12 @@ to the bottom right.</p>
 
     
   
+    <div class="desc"><p>Pad a table with 0's</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pathfinder.pad_table', this);">Show source &equiv;</a></p>
   <div id="source-pathfinder.pad_table" class="source">
     <pre><code>def pad_table(table, columns):
+    """Pad a table with 0's"""
     for row in table:
         if len(row) < columns:
             for i in range(len(row), columns):
@@ -1681,10 +1689,12 @@ to the bottom right.</p>
 
     
   
+    <div class="desc"><p>Given a filepath, try to load the file</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pathfinder.parse_file', this);">Show source &equiv;</a></p>
   <div id="source-pathfinder.parse_file" class="source">
     <pre><code>def parse_file(filepath, verbose):
+    """Given a filepath, try to load the file"""
     file_string = ''
     try:
         with open(filepath) as f:
@@ -1711,10 +1721,12 @@ to the bottom right.</p>
 
     
   
+    <div class="desc"><p>Parse input, where <code>user_input</code> is a list of rows of user input</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pathfinder.parse_input', this);">Show source &equiv;</a></p>
   <div id="source-pathfinder.parse_input" class="source">
     <pre><code>def parse_input(user_input):
+    """Parse input, where `user_input` is a list of rows of user input"""
     tables = []
     current_table = []
     max_column = 0 # try to fix user input#
@@ -1751,12 +1763,12 @@ to the bottom right.</p>
 
     
   
-    <div class="desc"><p>CLI interprets the arguments and options passed to pathfinder.py</p></div>
+    <div class="desc"><p>Interprets the arguments and options passed to pathfinder</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pathfinder.pathfinder_cli', this);">Show source &equiv;</a></p>
   <div id="source-pathfinder.pathfinder_cli" class="source">
     <pre><code>def pathfinder_cli():
-    """CLI interprets the arguments and options passed to pathfinder.py"""
+    """Interprets the arguments and options passed to pathfinder"""
     # In order to allow verbose to be the last input the evaluations
     # must be carried out after reading all the arguments.
     verbose = False
@@ -1808,13 +1820,13 @@ to the bottom right.</p>
 
     
   
-    <div class="desc"><p>test_num_of_paths(verbose): run unit tests on num_of_paths</p>
+    <div class="desc"><p>Run unit tests on num_of_paths</p>
 <p>If verbose is true, LOTS of stuff is printed about the tests</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pathfinder.test_num_of_paths', this);">Show source &equiv;</a></p>
   <div id="source-pathfinder.test_num_of_paths" class="source">
     <pre><code>def test_num_of_paths(verbose):
-    """test_num_of_paths(verbose): run unit tests on num_of_paths
+    """Run unit tests on num_of_paths
 
     If verbose is true, LOTS of stuff is printed about the tests
     """
