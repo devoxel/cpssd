@@ -11,7 +11,6 @@ Dependencies:
 Other References:
   Used pdoc to generate html documenation, https://github.com/BurntSushi/pdoc
 
-See docs/README.md for a Markdown version of this file
 See docs/pathfinder.m.html for the pdoc generated html
 
 -------------------------------------------------------------------------
