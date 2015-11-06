@@ -1,13 +1,23 @@
 pathfinder.py
-=============
-- Written by Aaron Delaney, 2015
-- Built with https://www.python.org/
-- Developed for CPSSD1 @ DCU
+Written by Aaron Delaney, 2015
 
-Command Line Interface
-----------------------
+Built with https://www.python.org/
+Developed for CPSSD1 @ DCU
+Last Accessed: 06/11/2015
 
-Usage: python pathfinder.py [OPTIONS] [TABLE FILE PATHS ...]
+Dependencies:
+  Python 2.7.X
+
+Other References:
+  Used pdoc to generate html documenation, https://github.com/BurntSushi/pdoc
+
+See docs/README.md for a Markdown version of this file
+See docs/pathfinder.m.html for the pdoc generated html
+
+-------------------------------------------------------------------------
+
+Usage:
+     python pathfinder.py [OPTIONS] [TABLE FILE PATHS ...]
 
 Prints out the amount of paths in a table from the
 top left to the bottom right.
@@ -30,6 +40,11 @@ Options
     This uses the in-build series of tests to ensure the num_of_paths works as
     intended.
 
+TABLE FILE PATHS
+----------------
+
+Table file paths refer to paths to table files.
+
 Table Files
 -----------
 
@@ -39,15 +54,13 @@ You should pass in the file path, relative to where you run pathfinder.
 
 Here is an example of a table entered in one of these files:
 
-```
 1111
 1101
 1111
 1111
-```
 
 If you want to have multiple tables in the same file
-seperate the with a newline.
+separate the with a newline.
 
 It's important you get the size right here, unlike in
 the user interactive mode.
@@ -55,14 +68,14 @@ the user interactive mode.
 Examples
 -------
 
-    # Testing
-    $ python pathfinder.py --verbose --test
+# Testing
+$ python pathfinder.py --verbose --test
 
-    # Using example files
-    $ python pathfinder.py --verbose example_tables.txt
+# Using example files
+$ python pathfinder.py --verbose example_tables.txt
 
-    # Interactive mode
-    $ python pathfinder.py --verbose
+# Interactive mode
+$ python pathfinder.py --verbose
 
 Input Assumptions
 -----------------
@@ -70,17 +83,13 @@ Input Assumptions
 To save time for people entering many lines, you can enter
 something like this:
 
-```
 $ 11
 $ 1111
-```
 
 And pathfinder will assume you mean:
 
-```
 $ 1100 # <-- zeros were padded as an assumption
 $ 1111
-```
 
 Interactive Mode
 ----------------
