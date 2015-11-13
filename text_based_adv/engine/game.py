@@ -8,10 +8,14 @@ import world
 
 class Game(object):
     def __init__(self, assets):
+        self.world = world
         self.debug = assets.meta.debug
-        self.assets = assets
+        self.entities = assets.entities
+        self.actions = assets.actions
         self.prompt_controller = controller.Prompt()
         self.player = assets.entities.Player(self.prompt_controller)
 
     def run(self):
-        pass
+        user_input = self.prompt_controller('$')
+        if user_input in self.actions:
+        
