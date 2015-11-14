@@ -3,19 +3,34 @@ Wand
 
 A coffeescript text-editor, performs magic on your text.
 
+
+
 Usage
 -----
 
-To use it just browse to the the url or alternatively
-just open `/dist/index.html` in a browser with local javascript support.
+Open `/dist/index.html` in a browser with local JavaScript support.
+
+This may cause issues however, due to browsers limiting JavaScript
+in a local environment.
+
+I would recommend instead building from source,
+as per the instructions below, and running the server, with
+
+    npm run server
 
 Building from source
 --------------------
 
-Coffeescript is a transcompiled language. It compiles to js, which
+### Coffeescript
+
+Coffeescript is a transcompiled language. It compiles to JavaScript, which
 is placed in a file called `/dist/dist.js`.
 
 That file is then loaded by the `/dist/index.html`.
+
+Note that the generated JavaScript also relies on jQuery.
+
+### Requirements
 
 To build the project you'll need nodejs and npm.
 
@@ -25,7 +40,7 @@ Find [Windows instructions here](http://blog.teamtreehouse.com/install-node-js-n
 
 I recommend v4.0.0 of node, but most versions should work.
 
-Once that's done run:
+### Using NPM to fetch the dependencies
 
 ```
 npm install
@@ -37,7 +52,9 @@ I'm also using npm as a build tool with it's scripts declaration. If you're
 interested you can read more about the process
 [here](http://blog.keithcirkel.co.uk/how-to-use-npm-as-a-build-tool/)
 
-Run `npm run` to see a list of all the scripts.
+You can then run `npm run` to see a list of all the scripts.
+
+
 
 Scripts
 -------
@@ -55,12 +72,16 @@ This will build the coffeescript any time it detects a change.
 Starts a `nano-server` instance which hosts the files in the `dist/` directory
 at `127.0.0.1:8123`
 
+
+
 Limitations of wand
 -------------------
 
 Wand was not designed with real world text editing in mind. It's slower than
 most modern text editors and doesn't actually keep track of things like cursor
 position or what's currently being rendered.
+
+
 
 Dependencies
 ------------
@@ -104,7 +125,6 @@ test them without having to worry about problems that occur when testing
 JavaScript sites locally, which stem from browsers trying to protect their
 computers from local javascript.
 
-References
-----------
+#### [octo-wordlist](https://github.com/devoxel/octo_wordlist)
 
-- https://github.com/sindresorhus/word-list
+A set of word-lists compiled by me. This project uses the large one.
