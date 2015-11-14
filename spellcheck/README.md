@@ -1,7 +1,7 @@
 Wand
 ====
 
-A coffeescript text-editor, performs magic on your text.
+A coffeescript text-editor, performs *magic* on your text.
 
 
 
@@ -39,27 +39,47 @@ Note that the generated JavaScript also relies on jQuery.
 
 To build the project you'll need nodejs and npm.
 
-Find [Linux/ Mac instructions here](https://docs.npmjs.com/getting-started/installing-node)
+I recommend v4.0.0 of node or newer, but most versions should work.
 
-Find [Windows instructions here](http://blog.teamtreehouse.com/install-node-js-npm-windows)
 
-I recommend v4.0.0 of node, but most versions should work.
+#### [Mac/Windows instructions](http://tinyurl.com/qejfed4)
+
+#### Linux Instructions:
+
+
+    $ cd ~/Downloads # or ~/downloads
+    $ wget https://nodejs.org/dist/v4.2.2/node-v4.2.2-linux-x64.tar.gz
+
+    # or if that doesn't work
+    $ wget --no-check-certificate https://nodejs.org/dist/v4.2.2/node-v4.2.2-linux-x64.tar.gz
+
+    $ cd /usr/local
+    $ sudo tar --strip-components 1 -xzy ~/Downloads/node-v4.2.2-linux-x64.tar.gz
+    $ sudo rm -f LICENSE README.md CHANGELOG.md
+
+    # then get up a new terminal and do
+    $ node -v
+    v4.2.2
+
+  [Source of information](http://www.thegeekstuff.com/2015/10/install-nodejs-npm-linux/)
 
 
 ### Using NPM to fetch the dependencies
 
-```
-npm install
-```
+    # inside the project directory run:
+    $ npm install
+    # a note on the warnings is at the bottom of this README.md
+
 
 npm will read from my `package.json` and handle the coffeescript dependencies.
+
 
 I'm also using npm as a build tool with it's scripts declaration. If you're
 interested you can read more about the process
 [here](http://blog.keithcirkel.co.uk/how-to-use-npm-as-a-build-tool/)
 
-You can then run `npm run` to see a list of all the scripts.
 
+You can then run `npm run` to see a list of all the scripts.
 
 
 Scripts
@@ -68,6 +88,7 @@ Scripts
 #### `npm run build`
 
 This will build the coffeescript
+
 
 #### `npm run server`
 
@@ -131,9 +152,23 @@ rather than worrying about a lot of things.
 `nano-server` provides a way to host the files locally, which reduces helps me
 test them without having to worry about problems that occur when testing
 JavaScript sites locally, which stem from browsers trying to protect their
-computers from local javascript.
+computers from local JavaScript.
 
 
 #### [octo-wordlist](https://github.com/devoxel/octo_wordlist)
 
 A set of word-lists compiled by me. This project uses the large one.
+
+
+
+Note on Warnings
+----------------
+
+When you install the project dependencies with npm
+
+    npm WARN package.json Wand@0.1.0 No repository field.
+    npm WARN package.json Wand@0.1.0 scripts['server'] should probably be scripts['start'].
+    npm WARN package.json Wand@0.1.0 No license field.
+
+This is simply because I haven't defined some stuff in the package.json that
+doesn't exist, like a repository or a LICENSE.
