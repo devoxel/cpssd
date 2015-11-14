@@ -63,10 +63,6 @@ Scripts
 
 This will build the coffeescript
 
-#### `npm run build:watch`
-
-This will build the coffeescript any time it detects a change.
-
 #### `npm run server`
 
 Starts a `nano-server` instance which hosts the files in the `dist/` directory
