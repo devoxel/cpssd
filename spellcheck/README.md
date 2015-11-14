@@ -18,8 +18,12 @@ as per the instructions below, and running the server, with
 
     npm run server
 
+
+
+
 Building from source
 --------------------
+
 
 ### Coffeescript
 
@@ -30,6 +34,7 @@ That file is then loaded by the `/dist/index.html`.
 
 Note that the generated JavaScript also relies on jQuery.
 
+
 ### Requirements
 
 To build the project you'll need nodejs and npm.
@@ -39,6 +44,7 @@ Find [Linux/ Mac instructions here](https://docs.npmjs.com/getting-started/insta
 Find [Windows instructions here](http://blog.teamtreehouse.com/install-node-js-npm-windows)
 
 I recommend v4.0.0 of node, but most versions should work.
+
 
 ### Using NPM to fetch the dependencies
 
@@ -82,14 +88,17 @@ position or what's currently being rendered.
 Dependencies
 ------------
 
+
 #### [nodejs](https://nodejs.org/en/)
 
 `nodejs` is used by `coffescript` and `npm`
+
 
 #### [npm](https://www.npmjs.com/)
 
 `npm` is used as a build tool. It downloads the dependencies, and acts as
 somewhat of a build tool by executing the right series of commands.
+
 
 #### [coffee-script](http://coffeescript.org/)
 
@@ -99,10 +108,12 @@ JavaScript and adds a few important features that JavaScript was always missing.
 It compiles to JavaScript and as such allows me to use JavaScript libraries
 such as jQuery.
 
+
 #### [coffeescript-concat](https://www.npmjs.com/package/coffeescript-concat)
 
 `coffeescript-concat` is a nice little tool to essentially allows me to split
 my source into multiple files.
+
 
 #### [jQuery](https://jquery.com/)
 
@@ -114,12 +125,14 @@ rather than worrying about a lot of things.
 
 `jQuery` is loaded by `index.html` and lives in the `dist/` folder.
 
+
 #### [nano-server](https://github.com/tsherif/nano-server)
 
 `nano-server` provides a way to host the files locally, which reduces helps me
 test them without having to worry about problems that occur when testing
 JavaScript sites locally, which stem from browsers trying to protect their
 computers from local javascript.
+
 
 #### [octo-wordlist](https://github.com/devoxel/octo_wordlist)
 
