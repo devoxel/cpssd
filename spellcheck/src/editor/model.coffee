@@ -5,7 +5,7 @@ Date:   29/10/2015
 Find more details in spellcheck/README.md
 ###
 
-#= require spellcheck
+#= require ../spellcheck.coffee
 
 # editor/model.coffee
 # -------------------
@@ -25,6 +25,7 @@ class EditorModel
     @text = @config.welcome_text
     @container = @view.container # controller needs to set events up on this
     @word_regex = /[a-zA-Z]+'?[a-zA-Z]+/ig
+    @spellchecker = new Spellchecker(@config)
 
   updateText: ->
     # Update the text
@@ -43,8 +44,7 @@ class EditorModel
       @view.misspelled = {}
     else
       @view.word_count = countStr(@text)
-      @view.misspelled = check_spelling(@text, @config.word_list,
-                                   @config.recommend_length, @view.misspelled)
+      @view.misspelled = @spellchecker.update(@text)
 
   updateWindowSize: ->
     @view.updateWindowSize()

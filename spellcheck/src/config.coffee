@@ -19,7 +19,7 @@ class Config
     @welcome_text = "Welcome to wand"
     @welcome_text_length = 3
     @word_list = []
-    @wordlist_url = "https://raw.githubusercontent.com/devoxel/octo_wordlist/master/medium.txt"
+    @wordlist_url = "https://raw.githubusercontent.com/devoxel/octo_wordlist/master/large.txt"
     @wordlist_request = $.ajax(@wordlist_url,
       cache: true,
       crossDomain: true,
