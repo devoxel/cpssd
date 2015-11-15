@@ -1,6 +1,5 @@
 ###
 Author: Aaron Delaney
-Date:   29/10/2015
 
 Find more details in spellcheck/README.md
 ###
@@ -8,7 +7,7 @@ Find more details in spellcheck/README.md
 # editor/BKTree.coffee
 # -------------------
 # Contains:
-# - the BKTree object
+# - the BKTree object and supporting objects
 
 
 class Node

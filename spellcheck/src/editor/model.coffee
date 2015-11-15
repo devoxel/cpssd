@@ -1,17 +1,15 @@
 ###
 Author: Aaron Delaney
-Date:   29/10/2015
 
 Find more details in spellcheck/README.md
 ###
-
-#= require ../spellcheck.coffee
 
 # editor/model.coffee
 # -------------------
 # Contains:
 # - the EditorModel class
 
+#= require ../spellcheck.coffee
 
 countStr = (words) ->
   # -> counts the amount of occurences of any given regex in a string

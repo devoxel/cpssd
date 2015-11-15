@@ -1,6 +1,5 @@
 ###
 Author: Aaron Delaney
-Date:   29/10/2015
 
 Find more details in spellcheck/README.md
 ###

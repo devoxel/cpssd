@@ -1,17 +1,15 @@
 ###
 Author: Aaron Delaney
-Date:   29/10/2015
 
 Find more details in spellcheck/README.md
 ###
-
-#= require BKTree
 
 # editor/spellcheck.coffee
 # -------------------
 # Contains:
 # - spell checking functions
 
+#= require BKTree
 
 min = (to_compare) ->
   smallest = to_compare[0]
