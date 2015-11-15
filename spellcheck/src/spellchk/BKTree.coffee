@@ -48,16 +48,25 @@ class BKTree
   query: (word, threshold, length) ->
     # Returns all words that are withen n distance from word
     # Returns a list sorted in ascending order of distance
-    recursive_search = (parent) =>
-      distance = @distance_callback(word, parent.get_word())
-      results = []
-      if distance <= threshold
-        @search_results.push( [distance, parent.get_word()] )
-      for i in [(distance-threshold)..(distance+threshold+1)]
-        if parent.in(i)
-          @search_results.concat( recursive_search( parent.get_child(i ) ) )
+    good_result = (elm) ->
+      if elm[0] < 1
+        return elm[0]
+      return undefined
 
     @search_results = []
-    recursive_search(@tree)
-    return @search_results.sort( (a,b) -> return a[0] - b[0] )[..length]
-           .map( (a) -> a[1])
+    recursive_search = (parent, length) =>
+      distance = @distance_callback(word, parent.get_word())
+      # javascript is evil so this wont raise an exception, it'll return false
+      # if length is out of range
+      if @search_results[length] < length - threshold
+          return
+      if distance <= threshold
+        @search_results.push( [distance, parent.get_word()] )
+        @search_results.sort( (a, b) -> a[0] - b[0] )
+      for i in [(distance-threshold)..(distance+threshold+1)]
+        if parent.in(i)
+          (recursive_search(parent.get_child(i), length))
+
+
+    recursive_search(@tree, length)
+    return @search_results[..length-1].map((elm) -> return elm[1])

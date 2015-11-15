@@ -13,7 +13,7 @@ Find more details in spellcheck/README.md
 class EditorView
   # -> This charge is of the view of the model
   constructor: (@config) ->
-    console.log("+ Initiating EditorView") if @config.debug
+    console.log("EditorView: Initiating") if @config.debug
     @word_count = @config.welcome_text_length
     @misspelled = []
 
@@ -61,10 +61,15 @@ class EditorView
     # A function that returns a html representation of a mispelling object
     s = ""
     for word, other_spellings of l
-      s += "<ul class='misspelling'><b>#{word}</b>"
+      s += "<div class='misspelling'><b>#{word}</b><br>"
       for spelling in other_spellings
-        s += "<li>#{spelling}</li>"
-      s += "</ul>"
+        s += "#{spelling}<br>"
+
+      padding = @config.recommend_length - ( other_spellings.length )
+      if padding > 0
+        for i in [0..padding-1]
+          s += "..<br>"
+      s += "</div>"
     return s
 
   infoHTML: (word_count, mispellings) ->

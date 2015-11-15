@@ -51,7 +51,17 @@ h1 {
   overflow: auto;
 }
 
+#loader {
+  color: #b58900;
+  font-size: 5em;
+  position: relative;
+  text-align: center;
+  top: 100%;
+}
+
 .misspelling {
+  border: 1px solid #002b36;
+  padding: 2px 2px 2px 2px;
   list-style-type: "> ";
   display: inline-block;
 }

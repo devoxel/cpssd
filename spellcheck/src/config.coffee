@@ -18,15 +18,16 @@ class Config
     @welcome_text = "Welcome to wand"
     @welcome_text_length = 3
     @word_list = []
-    @wordlist_url = "https://raw.githubusercontent.com/devoxel/octo_wordlist/master/large.txt"
-    @wordlist_request = $.ajax(@wordlist_url,
-      cache: true,
-      crossDomain: true,
-      dataType: "text"
-    ).done (data, textStatus, jqXHR) =>
-      console.log("Finished downloading wordlist") if @debug
-      @word_list = data.split(/\n/)
 
+    @bktree = undefined
+    @wordset = undefined
+
+    # Max tolerence greatly changes the speed of the lookup time
+    # however it reduces the results for very badly mispelled text
+    @max_tolerence = 2
+    # The wordlist also greatly changes speed, particulary of load time
+    # to decrease the load and query time, change medium.txt to small.txt
+    @wordlist_url = "https://raw.githubusercontent.com/devoxel/octo_wordlist/master/medium.txt"
     # ASSIGNMENT RELATED VARIABLES
     @spellcheck_types = ['min_edit', 'kernighan']
     @current_type = @spellcheck_types[0]

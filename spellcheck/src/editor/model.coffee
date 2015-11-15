@@ -9,7 +9,7 @@ Find more details in spellcheck/README.md
 # Contains:
 # - the EditorModel class
 
-#= require ../spellcheck.coffee
+#= require Spellchecker
 
 countStr = (words) ->
   # -> counts the amount of occurences of any given regex in a string
@@ -19,7 +19,7 @@ countStr = (words) ->
 class EditorModel
   # -> in charge of the data the editor looks after and how it is managed.
   constructor: (@config, @view) ->
-    console.log("+ Initiating Model") if @config.debug
+    console.log("EditorModel: initiating") if @config.debug
     @text = @config.welcome_text
     @container = @view.container # controller needs to set events up on this
     @word_regex = /[a-zA-Z]+'?[a-zA-Z]+/ig

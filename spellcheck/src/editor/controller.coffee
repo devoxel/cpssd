@@ -16,7 +16,7 @@ class EditorController
   # this class in case I ever wanted to expand what users can do.
   # (eg. settings)
   constructor: (@config, @model) ->
-    console.log("+ Initiating EditorController") if @config.debug
+    console.log("EditorController: Initiating") if @config.debug
     @setupEvents()
 
   setupEvents: ->
