@@ -18,50 +18,61 @@ def parse_corpus(csvf, lines):
             i += 1
     return s
 
-class Suffix(object):
-    def __init__(self, word):
+
+class WordPair(object):
+    def __init__(self, words):
         self._len = 1
-        self.ending_word = 1.
-        self.starting_word = 1.
-        self.balance_ending_probability(word)
-        self.balance_starting_probability(word)
-
-    def balance_ending_probability(self, s):
-        p = 1.
-        if s[-1] != '.':
-            if safe_get(s[-3:-2], 0) == '.':
-                p *= .75
-            else:
-                p *= .25
-        self.ending_word *= p
-
-    def balance_starting_probability(self, s):
-        p = 1.
-        if s[0] == s[0].capitalize():
-            p *= .85
-        self.starting_word *= p
+        self._words = words
 
     def add(self, s):
-        self.balance_ending_probability(s)
-        self.balance_starting_probability(s)
         self._len += 1
 
     def __len__(self):
         return self._len
 
     def __hash__(self):
-        return hash(repr(self))
+        return hash(self._words)
+
+
+class Prefix(WordPair):
+    pass
+
+
+class Suffix(WordPair):
+    pass
 
 
 class MarkovChain(object):
-    def __init__(self):
+    def __init__(self, corpus):
+        """ MarkovChain(corpus) -> returns MarkovChain built with corpus
+        
+        Arguments         
+        ---------                
+        #### corpus
+            type: list of strings
+        
+        Chain Storage
+        -------------
+        The Markov Chain is stored in a large dictionary where 
+        Prefix objects map to Suffix objects.
+        
+        These objects are based on the Words object which handles
+        the overrides. The object also handles removing punctuation
+        and handling probability of each word being a starting word,
+        ending word, etc.
+        """
         self._chain = {}
-        self._prefixs = {}
+        self.build_chain(corpus)
+
 
     def build_chain(self, corpus):
+        """
+        """
         for i in xrange(0, len(corpus)):
-            prefix = safe_get( corpus[i:i+1],   0)
-            suffix = safe_get( corpus[i+1:i+2], 0)
+            prefix = Prefix(safe_get(corpus[i:i+1], 0) ,
+                            safe_get(corpus[i+1:i+2], 0))
+            suffix = Suffix(safe_get(corpus[i+3:i+4], 0),
+                            safe_get(corpus[i+4:i+5], 0))
             if prefix is not None and suffix is not None:
                 clean_prefix = clean_up(prefix)
                 clean_suffix = clean_up(suffix)
@@ -82,16 +93,16 @@ class MarkovChain(object):
 
     def generate(self):
         starts = random.sample(self._prefixs, 25)
-        sorted_starts = sorted(self._prefixs.keys(), 
-                        key=lambda x: self._prefixs[x].starting_word, reverse=True)
-        p =  int( abs(random.gauss(0, .2) * len(sorted_starts) ) )
-        current = sorted_starts[p]
+        sorted_starts = sorted( self._prefixs.keys(), 
+                        key=lambda x: self._prefixs[x].starting_word, 
+                        reverse=True )
         s = ""
         limit = 140
         while len(s) + len(current) < limit:
             s += current + " "
-            sorted_suffixs = sorted(self._chain[current].keys(), 
-                                key= lambda x: len(self._chain[current][x]), reverse=True)
+            sorted_suffixs = sorted( self._chain[current].keys(), 
+                                key= lambda x: len(self._chain[current][x]),
+                                reverse=True )
             accum = random.random()
             changed = False
             first_possible = None
