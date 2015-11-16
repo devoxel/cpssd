@@ -5,7 +5,7 @@ from src.markov import MarkovChain, parse_corpus
 if __name__ == "__main__":
     mrk = MarkovChain()
     with open("corpuses/training.1600000.processed.noemoticon.csv", "r") as f:
-        corpus = parse_corpus(f, 10000 )
+        corpus = parse_corpus(f, 1000)
     mrk.build_chain(corpus)
 
     while True:

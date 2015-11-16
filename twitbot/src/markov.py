@@ -56,14 +56,22 @@ class Suffix(object):
 class MarkovChain(object):
     def __init__(self):
         self._chain = {}
+        self._prefixs = {}
 
     def build_chain(self, corpus):
         for i in xrange(0, len(corpus)):
             prefix = safe_get( corpus[i:i+1],   0)
             suffix = safe_get( corpus[i+1:i+2], 0)
             if prefix is not None and suffix is not None:
-                prefix = clean_up(prefix)
+                clean_prefix = clean_up(prefix)
                 clean_suffix = clean_up(suffix)
+                
+                if clean_prefix not in self._prefixs:
+                    self._prefixs[clean_prefix] = Suffix(prefix)
+                else:
+                    self._prefixs[clean_prefix].add(prefix)
+
+                prefix = clean_up(prefix)
                 if prefix not in self._chain:
                     self._chain[prefix] = { clean_suffix: Suffix(suffix) }
                 elif prefix in self._chain:
@@ -73,15 +81,29 @@ class MarkovChain(object):
                         self._chain[prefix][clean_suffix] = Suffix(suffix)
 
     def generate(self):
-        starts = random.sample(self._chain.keys(), 25)
-        sorted_starts = sorted(self._chain[current].keys(), key=lambda x: self._chain[current][x].starting_word )
-        p =  int(abs(random.gauss(0, .2) * len(sorted_starts)))
+        starts = random.sample(self._prefixs, 25)
+        sorted_starts = sorted(self._prefixs.keys(), 
+                        key=lambda x: self._prefixs[x].starting_word, reverse=True)
+        p =  int( abs(random.gauss(0, .2) * len(sorted_starts) ) )
         current = sorted_starts[p]
         s = ""
         limit = 140
         while len(s) + len(current) < limit:
             s += current + " "
-            sorted_suffixs = sorted(self._chain[current].keys(), key=lambda x: len(self._chain[current][x]) )
-            p = int(abs(random.gauss(0, .2) * len(sorted_suffixs)))
-            current = sorted_suffixs[p]
+            sorted_suffixs = sorted(self._chain[current].keys(), 
+                                key= lambda x: len(self._chain[current][x]), reverse=True)
+            accum = random.random()
+            changed = False
+            first_possible = None
+            for key in sorted_suffixs:
+                if key in self._chain:
+                    if first_possible is None:
+                        first_possible = key
+                    cost = len(self._chain[current][key])/len(sorted_suffixs)
+                    accum += cost
+                    if accum >= 1:
+                        current = key
+                        changed = True
+            if not changed:
+                current = first_possible
         return s
