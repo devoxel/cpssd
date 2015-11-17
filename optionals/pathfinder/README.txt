@@ -27,12 +27,10 @@ USAGE
   Prints out the amount of paths in a table from the
   top left to the bottom right.
 
-Interactive mode:
+  Interactive mode:
 
-  If no table_files are provided, pathfinder.py will enter an interactive
-  user mode.
-
-
+    If no table_files are provided, pathfinder.py will enter an interactive
+    user mode.
 
   Options
   -------
