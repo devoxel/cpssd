@@ -6,15 +6,18 @@ Built with https://www.python.org/
 Developed for CPSSD1 @ DCU
 Last Accessed: 06/11/2015
 
-Dependencies:
+MUST HAVE INSTALLED:
+
   Python 2.7.X
 
-Other References:
+NOTABLE OTHER SOFTWARE USED:
+
   Used pdoc to generate html documenation
   - https://github.com/BurntSushi/pdoc
 
 
-Docs
+DOCS
+
 - Readable HTML documentation has been placed in
       docs/pathfinder.m.html
 - If there is an error in that for any reason, refer to the rest of this file.
