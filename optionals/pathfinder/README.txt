@@ -1,4 +1,5 @@
-pathfinder.py
+- pathfinder.py
+
 Written by Aaron Delaney, 2015
 
 Built with https://www.python.org/
@@ -9,42 +10,50 @@ Dependencies:
   Python 2.7.X
 
 Other References:
-  Used pdoc to generate html documenation, https://github.com/BurntSushi/pdoc
+  Used pdoc to generate html documenation
+  - https://github.com/BurntSushi/pdoc
 
-See docs/pathfinder.m.html for the pdoc generated html
 
--------------------------------------------------------------------------
+Docs
+- Readable HTML documentation has been placed in
+      docs/pathfinder.m.html
+- If there is an error in that for any reason, refer to the rest of this file.
 
-Usage:
+
+USAGE
+
      python pathfinder.py [OPTIONS] [TABLE FILE PATHS ...]
 
-Prints out the amount of paths in a table from the
-top left to the bottom right.
+  Prints out the amount of paths in a table from the
+  top left to the bottom right.
 
-If no table_files are provided, pathfinder.py will enter an interactive
-user mode.
+Interactive mode:
 
-Options
--------
+  If no table_files are provided, pathfinder.py will enter an interactive
+  user mode.
 
---verbose:
-    Enables verbose output
 
---help
-    Print this help file
 
---test
-    Initiates test protocol.
+  Options
+  -------
 
-    This uses the in-build series of tests to ensure the num_of_paths works as
-    intended.
+  --verbose:
+      Enables verbose output
 
-TABLE FILE PATHS
-----------------
+  --help
+      Print this help file
 
-Table file paths refer to paths to table files.
+  --test
+      Initiates test protocol.
 
-Table Files
+      This uses the in-build series of tests to ensure the num_of_paths works as
+      intended.
+
+  TABLE FILE PATHS refers to paths to table files. Please use paths python can
+  understand, so relative to pathfinder.py, or absolute.
+
+
+TABLE FILES
 -----------
 
 A table file is a file representing a table, or a series of tables.
@@ -64,7 +73,8 @@ separate the with a newline.
 It's important you get the size right here, unlike in
 the user interactive mode.
 
-Examples
+
+EXAMPLES
 -------
 
 # Testing
@@ -76,7 +86,8 @@ $ python pathfinder.py --verbose example_tables.txt
 # Interactive mode
 $ python pathfinder.py --verbose
 
-Input Assumptions
+
+INPUT ASSUMPTIONS
 -----------------
 
 To save time for people entering many lines, you can enter
@@ -90,7 +101,8 @@ And pathfinder will assume you mean:
 $ 1100 # <-- zeros were padded as an assumption
 $ 1111
 
-Interactive Mode
+
+INTERACTIVE MODE
 ----------------
 
 The input is much the same as the file input.
