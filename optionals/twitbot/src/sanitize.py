@@ -11,9 +11,3 @@ def strip_word(s, regex):
 
 def break_up(s):
     return strip_word(s, _word_comp_regex)
-
-def clean_up(s):
-    cleaned = ""
-    for part in strip_word(s, _clean_word_comp_regex):
-        cleaned += part
-    return cleaned

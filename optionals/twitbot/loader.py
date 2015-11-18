@@ -1,11 +1,19 @@
 import sys
-sys.dont_write_bytecode = True
 from src.markov import MarkovChain, parse_corpus
+from src.helper import safe_get
+
+import cProfile
 
 if __name__ == "__main__":
+
+    lines = safe_get(sys.argv, 1, 16000)
+
     with open("corpuses/training.1600000.processed.noemoticon.csv", "r") as f:
-        corpus = parse_corpus(f, 10000)
+        corpus = parse_corpus(f, lines)
+        print "Done parsing corpus!"
+
     mrk = MarkovChain(corpus)
+    print "Done parsing MarkovChain\n\n"
 
     while True:
         print mrk.generate()

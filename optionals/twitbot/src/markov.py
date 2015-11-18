@@ -3,8 +3,10 @@ import itertools
 import random
 import math
 
-from sanitize import clean_up, break_up
+from sanitize import break_up
 from helper   import safe_get
+
+from collections import deque
 
 def parse_corpus(csvf, lines):
     s = []
@@ -17,46 +19,6 @@ def parse_corpus(csvf, lines):
             s.extend(break_up(row[5]))
             i += 1
     return s
-
-
-class WordPair(object):
-    def __init__(self, *args):
-        self._words = []
-        self._str = ""
-        for word in args:
-            if word is not None:
-                self._words.append(clean_up(word))
-                self._str += " " + word
-
-        if self._words > 0:
-            self._words = tuple(self._words)
-        else:
-            self._words = None
-
-        self._len = 1
-
-    def __repr__(self):
-        return repr(self._words) + '*' + repr(self._len)
-
-    def __len__(self):
-        return self._len
-
-    def __eq__(self, other):
-        return self._words == other._words
-
-    def __hash__(self):
-        return hash(self._words)
-
-    def __str__(self):
-        return self._str
-
-class Prefix(WordPair):
-    pass
-
-class Suffix(WordPair):
-    def add(self):
-        self._len += 1
-
 
 class MarkovChain(object):
     def __init__(self, corpus):
@@ -77,56 +39,64 @@ class MarkovChain(object):
         and handling probability of each word being a starting word,
         ending word, etc.
         """
-        self._chain = {}
-        self.build_chain(corpus)
+        self._chain  = {}
+        self._build_chain(corpus)
 
 
-    def build_chain(self, corpus):
+    def _build_chain(self, corpus):
         """
         """
-        for i in xrange(0, len(corpus)):
-            word1 = safe_get(corpus[i:i+1], 0)
-            word2 = safe_get(corpus[i+1:i+2], 0)
-            word3 = safe_get(corpus[i+2:i+3], 0)
-            word4 = safe_get(corpus[i+4:i+5], 0)
+        current_words = deque(corpus[0:3], maxlen=4)
+        for i in xrange(3, len(corpus)):
+            current_words.append(corpus[i])
 
-            prefix = Prefix(word1, word2)
-            suffix = Suffix(word3, word4)
-            mapped_suffixs = self._chain.get(prefix)
-            if mapped_suffixs is None:
-                self._chain[prefix] = [suffix]
+            word1 = current_words[0]
+            word2 = current_words[1]
+            word3 = current_words[2]
+            word4 = current_words[3]
+
+            suffixs = (word3, word4)
+            firstmap = self._chain.get(word1)
+            if firstmap is None:
+                self._chain[word1] = { word2: { suffixs: 1 } }
             else:
-                if suffix in mapped_suffixs:
-                    mapped_suffixs[mapped_suffixs.index(suffix)].add()
+                secondmap = firstmap.get(word2)
+                if secondmap is None:
+                    firstmap[word2] = { suffixs: 1 }
                 else:
-                    mapped_suffixs.append(suffix)
+                    if suffixs in secondmap:
+                        secondmap[suffixs] += 1
+                    else:
+                        secondmap[suffixs] = 1
 
     def generate(self):
-        possible_starts = random.sample(self._chain.keys(), 50)
-
-        sorted_starts = sorted( possible_starts,
-                                key=lambda x: len(self._chain[x]) )
-        accum = 1 - abs(random.gauss(0, .25))
-        while accum
-
+        possible_start1 = random.choice(self._chain.keys())
+        possible_start2 =random.choice(self._chain[possible_start1].keys())
         s = ""
         limit = 140
-        current_prefix = sorted_starts.pop()
         while len(s) < limit:
-            s += str(current_prefix)
-            sorted_suffixs = sorted( self._chain[current_prefix], reverse=True,
-                                     key=lambda x: len(x) )
-            print current_prefix
+            suffixs = self._chain[possible_start1][possible_start2]
+            s += "".join( (possible_start1, " ", possible_start2) )
+
+            sorted_suffixs = sorted( suffixs.keys(), reverse=True, key=lambda x: suffixs[x] )
+            print suffixs
             print sorted_suffixs
-            # work on the probabilities like accumulators
-            accum = 1
+            total_usages = 0
+            for suffix in sorted_suffixs:
+                total_usages += suffixs[suffix]
+
+            accum = random.random()
             chosen = False
-            i = 0
-            while accum > 0:
-                if suffix in self._chain:
-                    cost = len(sorted_suffixs[i]) // len(sorted_suffixs)
-                    accum -= cost
-                i += 1
+            other_possibilities = []
+            for suffix in sorted_suffixs:
+                print suffix
+                cost = suffixs[suffix] // total_usages
+                accum += cost
+                if accum >= 1:
+                    chosen = True
+                    current_prefix = suffix
+                elif suffix in self._chain:
+                    other_possibilities.append(suffix)
 
             if not chosen and len(other_possibilities) > 0:
                 current_prefix = other_possibilities.pop()
