@@ -69,38 +69,45 @@ class MarkovChain(object):
                     else:
                         secondmap[suffixs] = 1
 
-    def generate(self):
+    def choose_suffix(self, keyset, mapping):
+        sorted_suffixs = sorted(keyset, reverse=True, key=lambda x: mapping[x])
+
+        total_usages = 0.0 # float here to make sure no rounding happens
+        for key in sorted_suffixs:
+            total_usages += mapping[key]
+
+        accum = random.random()
+        chosen = None
+        other_possibilities = []
+
+        for suffix in sorted_suffixs:
+            cost = mapping[suffix] / total_usages
+            accum += cost
+            if accum >= 1:
+                chosen = suffix
+            elif suffix in self._chain:
+                other_possibilities.append(suffix)
+
+        if chosen is None:
+            if len(other_possibilities) > 0:
+                chosen = other_possibilities.pop()
+            else:
+                raise ValueError
+
+        return chosen
+
+    def choose_start(self):
         possible_start1 = random.choice(self._chain.keys())
-        possible_start2 =random.choice(self._chain[possible_start1].keys())
+        possible_start2 = random.choice(self._chain[possible_start1].keys())
+        return (possible_start1, possible_start2)
+
+    def generate(self):
+        current_prefix = self.choose_start()
         s = ""
         limit = 140
         while len(s) < limit:
-            suffixs = self._chain[possible_start1][possible_start2]
-            s += "".join( (possible_start1, " ", possible_start2) )
-
-            sorted_suffixs = sorted( suffixs.keys(), reverse=True, key=lambda x: suffixs[x] )
-            print suffixs
-            print sorted_suffixs
-            total_usages = 0
-            for suffix in sorted_suffixs:
-                total_usages += suffixs[suffix]
-
-            accum = random.random()
-            chosen = False
-            other_possibilities = []
-            for suffix in sorted_suffixs:
-                print suffix
-                cost = suffixs[suffix] // total_usages
-                accum += cost
-                if accum >= 1:
-                    chosen = True
-                    current_prefix = suffix
-                elif suffix in self._chain:
-                    other_possibilities.append(suffix)
-
-            if not chosen and len(other_possibilities) > 0:
-                current_prefix = other_possibilities.pop()
-            else:
-                break
-
+            print current_prefix
+            s += current_prefix[0] + " " + current_prefix[1] + " "
+            mapping = self._chain[current_prefix[0]][current_prefix[1]]
+            current_prefix = self.choose_suffix(mapping.keys(), mapping)
         return s + "."

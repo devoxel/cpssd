@@ -4,3 +4,12 @@
 
 ####  5 days, geddit done.
 ##### Writing this on Monday Night
+
+#### 4 days left
+
+work to do:
+
+- Do part2 of spellchecker
+- Fix up markov chain generator
+- Package and submit work
+- Maybe quickly rush pegboard

@@ -1,10 +1,7 @@
 import re
 
-_word_regex      = r"\W+[\.\,]?"
-_word_comp_regex = re.compile(_word_regex, flags=re.IGNORECASE)
-
-_clean_word_regex      = r"\W+"
-_clean_word_comp_regex = re.compile(_word_regex, flags=re.IGNORECASE)
+_word_regex      = r"\@?\W+?"
+_word_comp_regex = re.compile(_word_regex)
 
 def strip_word(s, regex):
     return re.split(regex, s)
