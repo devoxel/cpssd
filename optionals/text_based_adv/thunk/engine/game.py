@@ -18,4 +18,4 @@ class Game(object):
     def run(self):
         user_input = self.prompt_controller('$')
         if user_input in self.actions:
-        
+            print "Horray"

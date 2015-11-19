@@ -42,15 +42,21 @@ but it's not required.
     .\venv\Scripts\activate
 
 
-You can automatically install the dependencies with pip.
+You can automatically install the package with pip
 
-    pip install -e .
+    pip install .
 
 
 Running from source
 --------------------
 
-    python play.py
+    # Pip should setup the thunk script, so you should just be able to run
+    thunk.py
+    # If that doesn't work, you can run the thunk.py file in run
+    python run/thunk.py
+    # If this fails, pip failed to setup the file somehow
+    # running thunk/game.py should work though
+    python thunk/game.py
 
 
 Running the tests
