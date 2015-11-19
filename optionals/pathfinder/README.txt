@@ -1,27 +1,27 @@
-- pathfinder.py
+# pathfinder.py
 
 Written by Aaron Delaney, 2015
 
 Built with https://www.python.org/
 Developed for CPSSD1 @ DCU
-Last Accessed: 06/11/2015
 
-MUST HAVE INSTALLED:
+## Required:
 
-  Python 2.7.X
+- Python 2.7.X
 
-NOTABLE OTHER SOFTWARE USED:
+## Other Software Used
 
-  Used pdoc to generate html documenation
-  - https://github.com/BurntSushi/pdoc
+Used pdoc to generate html documenation
+-  https://github.com/BurntSushi/pdoc
 
 
-DOCS
+## Docs
 
-- Readable HTML documentation has been placed in
-      docs/pathfinder.m.html
-- If there is an error in that for any reason, refer to the rest of this file.
+Readable HTML documentation has been placed in docs/pathfinder.m.html
 
+If there is an error in that for any reason, refer to the rest of this file.
+
+---------------------------
 
 USAGE
 
