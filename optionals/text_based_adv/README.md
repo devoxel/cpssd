@@ -20,7 +20,7 @@ Goals
 Support
 --------------
 
-The game is built on `Python 2.7.X`, and it is recommend you use 
+The game is built on `Python 2.7.X`, and it is recommend you use
 that to run from source.
 
 
@@ -28,11 +28,9 @@ that to run from source.
 Dependencies
 --------------
 
-- `blessings`, which allows coloured terminal
+- `pytest` -- a modular unit-test platform
 
-- `pytest`, a modular unit-test platform
-
-I would recommend that you install install a virtual envirionment
+I would recommend that you install install a virtual environment
 but it's not required.
 
     pip install virtualenv
@@ -44,9 +42,9 @@ but it's not required.
     .\venv\Scripts\activate
 
 
-You can automatically install the dependincies with pip.
+You can automatically install the dependencies with pip.
 
-    pip install -r requirements.txt
+    pip install -e .
 
 
 Running from source
@@ -58,15 +56,13 @@ Running from source
 Running the tests
 ------------------
 
-    
+    py.test
 
-Generating the documentation
-----------------------------
 
 Directory Structure
 --------------------
 
-#### Game Engine (located in `src/`)
+#### Game Engine (located in `thunk/src/`)
 
 The game engine is the thing that keeps the game moving. It should keep track
 of game states, handle the input and views and just make the game work.
@@ -77,11 +73,9 @@ Documentation about how the game engine works is located in the README file
 in the base of the `src/` folder
 
 
-#### Game Assets (located in `assets/`)
+#### Game Assets (located in `thunk/assets/`)
 
 The game assets area all the aspects of the game that are unique to the game.
 
 Documentation about how the assets are organized is in the README file in the
 base of the `assets/` folder.
-
-
