@@ -1,8 +1,24 @@
+<!DOCTYPE html>
+<html>
+<title>Hello Strapdown</title>
+
+<xmp theme="united" style="display:none;">
 # Twitter Bot
 
-## Provided corpus
+- Author: Aaron Delaney
+- Email:  aaron.delaney29@mail.dcu.ie
+- Date:   20/11/2015
 
-[Sentiment140](http://help.sentiment140.com/for-students/)
+## Notably uses
+
+- [Sentiment140](http://help.sentiment140.com/for-students/)
+
+  Large corpus full of random tweet data
+
+
+- [Strapdown.js](http://strapdownjs.com/)
+
+  Dynamically writes markdown to html
 
 ## Usage
 
@@ -10,6 +26,7 @@ How to run:
 
     python loader.py (options) [corpus] [col] [lines]
 
+This should work on any `python 2.7.x` platform.
 
 ## Arguments
 
@@ -19,11 +36,11 @@ How to run:
 | col    | The col of CSV file to look at         |`5`                        |
 | lines  | The amount of lines you with to load   |`750000`                   |
 
-## Optional Options
+## Options
 
 | name   | description                            | default value             |
 |--------|----------------------------------------|---------------------------|
-| debug  | print tracebacks if errors occur       |`corpuses/sentiment140.csv`|
+| debug  | print tracebacks if errors occur       | `false`                   |
 
 ## Other Notes
 
@@ -42,3 +59,7 @@ emotions.
 - Examine probabilities of tweets using word analysis, for example perhaps
 analyze the distribution of words and adjust MarkovChain generation techniques
 with these distributions
+</xmp>
+
+<script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
+</html>
