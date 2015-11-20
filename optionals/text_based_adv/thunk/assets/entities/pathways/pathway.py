@@ -1,3 +1,0 @@
-
-class Pathway(object):
-    pass

@@ -1,3 +1,0 @@
-
-class Place(object):
-    pass

@@ -1,4 +1,0 @@
-
-class WorldView(object):
-    pass
-
