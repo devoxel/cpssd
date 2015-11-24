@@ -11,7 +11,7 @@ import random
 import math
 import string
 
-from sanitize import break_up
+from sanitize import break_up, clean_sentence
 from helper   import safe_get
 
 # the deque is a python queue-like object
@@ -19,6 +19,7 @@ from helper   import safe_get
 from collections import deque
 
 def parse_corpus(csvf, col, lines):
+    """Read in a corpus from a file and return a list of strings in the list"""
     s = []
     reader = csv.reader(csvf)
     i = 0
@@ -168,4 +169,5 @@ class MarkovChain(object):
             mapping = self._chain[current_prefix[0]][current_prefix[1]]
             suffix = self.choose_suffix(mapping.keys(), mapping)
             current_prefix.append(suffix)
-        return s + "."
+
+        return clean_sentence(s)
