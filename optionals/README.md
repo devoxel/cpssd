@@ -1,15 +1,3 @@
-# [Optionals](https://loop.dcu.ie/mod/assign/view.php?id=346251)
+# netflix optional problems
 
-### DUE Monday, 23 November 2015, 11:55 AM
-
-####  5 days, geddit done.
-##### Writing this on Monday Night
-
-#### 4 days left
-
-work to do:
-
-- Do part2 of spellchecker
-- Fix up markov chain generator
-- Package and submit work
-- Maybe quickly rush pegboard
+a few bits and bobs here
